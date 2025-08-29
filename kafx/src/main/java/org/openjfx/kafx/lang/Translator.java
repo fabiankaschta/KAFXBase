@@ -12,7 +12,7 @@ public class Translator {
 
 	static {
 		control = new MultiResourceBundleControl("lang");
-		control.addBundleName("kafx.lang.kafx");
+		control.addBundleName(Translator.class.getPackageName() + ".kafx");
 	}
 
 	public static void addBundleName(String bundleName) {
