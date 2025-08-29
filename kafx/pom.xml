@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openjfx</groupId>
     <artifactId>kafx</artifactId>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<packaging>jar</packaging>
     <properties>
