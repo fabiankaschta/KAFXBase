@@ -7,41 +7,47 @@ import org.openjfx.kafx.controller.Controller;
 
 public class Translator {
 
-	private final static MultiResourceBundleControl control;
-	private static ResourceBundle bundle;
+	private final ResourceBundle defaultBundle;
+	private final ResourceBundle customBundle;
 
-	static {
-		control = new MultiResourceBundleControl("lang");
-		control.addBundleName(Translator.class.getPackageName() + ".kafx");
+	public Translator() {
+		this(null, Locale.getDefault());
 	}
 
-	public static void addBundleName(String bundleName) {
-		control.addBundleName(bundleName);
+	public Translator(Locale locale) {
+		this(null, locale);
 	}
 
-	public static String get(String key) {
-		if (bundle == null) {
-			try {
-				bundle = ResourceBundle.getBundle(control.getBaseName(), Locale.getDefault(), control);
-			} catch (Exception e) {
-				Controller.exception(e);
-				return '[' + key + ']';
-			}
-		}
+	public Translator(ResourceBundle customBundle) {
+		this(customBundle, Locale.getDefault());
+	}
+
+	public Translator(ResourceBundle customBundle, Locale locale) {
+		ResourceBundle defaultBundle = null;
 		try {
-			if (bundle.containsKey(key)) {
-				return bundle.getString(key);
+			defaultBundle = ResourceBundle.getBundle(Translator.class.getPackageName() + ".kafx", locale);
+		} catch (Exception e) {
+			System.out.println(e);
+//			Controller.exception(e);
+		}
+		this.defaultBundle = defaultBundle;
+		this.customBundle = customBundle;
+	}
+
+	public String get(String key) {
+		try {
+			if (this.customBundle != null && this.customBundle.containsKey(key)) {
+				return this.customBundle.getString(key);
+			} else if (this.defaultBundle != null && this.defaultBundle.containsKey(key)) {
+				return this.defaultBundle.getString(key);
 			} else {
-				Controller.log(Controller.DEBUG, "missing lang " + key + " " + bundle.getLocale());
+				Controller.log(Controller.DEBUG, "missing lang " + key + " " + defaultBundle.getLocale());
 				return '[' + key + ']';
 			}
 		} catch (Exception e) {
-			Controller.log(Controller.DEBUG, "missing lang " + key + " " + bundle.getLocale());
+			Controller.log(Controller.DEBUG, "missing lang " + key + " " + defaultBundle.getLocale());
 			return '[' + key + ']';
 		}
-	}
-
-	private Translator() {
 	}
 
 }

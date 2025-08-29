@@ -3,7 +3,6 @@ package org.openjfx.kafx.view.dialog;
 import javax.crypto.SecretKey;
 
 import org.openjfx.kafx.controller.Controller;
-import org.openjfx.kafx.lang.Translator;
 import org.openjfx.kafx.view.dialog.userinput.UserInputTextInput;
 
 import javafx.scene.control.ButtonType;
@@ -14,10 +13,10 @@ public class DialogEnterPassword extends DialogUserInput<SecretKey> {
 	private final UserInputTextInput password;
 
 	public DialogEnterPassword() {
-		super(Translator.get("dialog_enterPassword_title"));
+		super(Controller.translate("dialog_enterPassword_title"));
 
 		this.password = new UserInputTextInput(new PasswordField());
-		super.addInput(this.password, Translator.get("dialog_enterPassword_password"));
+		super.addInput(this.password, Controller.translate("dialog_enterPassword_password"));
 
 		ButtonType cancelButtonType = ButtonType.CANCEL;
 		ButtonType okButtonType = ButtonType.OK;

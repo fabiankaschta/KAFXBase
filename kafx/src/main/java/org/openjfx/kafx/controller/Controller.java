@@ -14,6 +14,7 @@ import javax.crypto.SecretKey;
 
 import org.openjfx.kafx.io.Config;
 import org.openjfx.kafx.io.FileIO;
+import org.openjfx.kafx.lang.Translator;
 import org.openjfx.kafx.secure.EncryptionHelper;
 import org.openjfx.kafx.view.alert.AlertException;
 import org.openjfx.kafx.view.alert.AlertInvalidPassword;
@@ -44,15 +45,17 @@ public class Controller {
 	protected static Controller controller;
 	protected final FileIO fileIO;
 	protected final Config config;
+	protected final Translator translator;
 	protected final EncryptionHelper encrpytionHelper;
 
-	protected Controller(FileIO fileIO, Config config) {
-		this(fileIO, config, null);
+	protected Controller(FileIO fileIO, Config config, Translator translator) {
+		this(fileIO, config, translator, null);
 	}
 
-	protected Controller(FileIO fileIO, Config config, EncryptionHelper encrpytionHelper) {
+	protected Controller(FileIO fileIO, Config config, Translator translator, EncryptionHelper encrpytionHelper) {
 		this.fileIO = fileIO;
 		this.config = config;
+		this.translator = translator;
 		this.encrpytionHelper = encrpytionHelper;
 		logger.setUseParentHandlers(false);
 		logger.addHandler(logHandler);
@@ -545,6 +548,10 @@ public class Controller {
 			controller.secretKey = oldKey;
 		}
 		saveFile(); // save file
+	}
+
+	public static String translate(String key) {
+		return controller.translator.get(key);
 	}
 
 }

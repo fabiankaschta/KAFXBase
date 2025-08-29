@@ -2,7 +2,7 @@ package org.openjfx.kafx.view.dialog;
 
 import java.util.List;
 
-import org.openjfx.kafx.lang.Translator;
+import org.openjfx.kafx.controller.Controller;
 import org.openjfx.kafx.view.dialog.userinput.UserInput;
 
 import javafx.beans.binding.BooleanExpression;
@@ -24,7 +24,7 @@ public abstract class DialogAdd<T> extends DialogUserInputButtonBinding<T> {
 		super(title);
 
 		ButtonType cancelButtonType = ButtonType.CANCEL;
-		ButtonType addButtonType = new ButtonType(Translator.get("dialog_add_button_add"), ButtonData.OK_DONE);
+		ButtonType addButtonType = new ButtonType(Controller.translate("dialog_add_button_add"), ButtonData.OK_DONE);
 		ButtonType addMoreButtonType = ButtonType.NEXT;
 		this.getDialogPane().getButtonTypes().addAll(addMoreButtonType, addButtonType, cancelButtonType);
 

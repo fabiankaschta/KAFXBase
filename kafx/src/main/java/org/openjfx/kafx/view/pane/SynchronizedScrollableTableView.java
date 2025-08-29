@@ -2,7 +2,7 @@ package org.openjfx.kafx.view.pane;
 
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_LAST_COLUMN;
 
-import org.openjfx.kafx.lang.Translator;
+import org.openjfx.kafx.controller.Controller;
 
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -21,7 +21,7 @@ import javafx.scene.text.Text;
 public class SynchronizedScrollableTableView<T> extends BorderPane {
 
 	private final TableView<T> left, center;
-	private final Text placeholder = new Text(Translator.get("tab_overview_no_students"));
+	private final Text placeholder = new Text(Controller.translate("tab_overview_no_students"));
 
 	public SynchronizedScrollableTableView(TableView<T> left, TableView<T> center) {
 		this.left = left;
