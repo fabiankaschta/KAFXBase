@@ -76,6 +76,14 @@ public class SynchronizedScrollableTableView<T> extends BorderPane {
 			this.setCenter(center);
 		}
 	}
+	
+	public TableView<T> getLeftTable() {
+		return this.left;
+	}
+	
+	public TableView<T> getCenterTable() {
+		return this.center;
+	}
 
 	@SuppressWarnings("unchecked")
 	private void init() {
