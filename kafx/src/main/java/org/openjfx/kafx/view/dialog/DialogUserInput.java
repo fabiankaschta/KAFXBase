@@ -23,6 +23,7 @@ public abstract class DialogUserInput<T> extends Dialog<T> {
 		this.getDialogPane().setContent(grid);
 		Controller.fontSizeProperty()
 				.subscribe(fontSize -> this.getDialogPane().setStyle("-fx-font-size: " + fontSize));
+		this.initOwner(Controller.getPrimaryStage());
 	}
 
 	protected ObservableList<UserInput<?>> userInputsUnmodifiable() {

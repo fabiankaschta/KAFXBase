@@ -39,6 +39,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class Controller {
 
@@ -47,6 +48,7 @@ public class Controller {
 	protected final Config config;
 	protected final Translator translator;
 	protected final EncryptionHelper encrpytionHelper;
+	protected Stage primaryStage = null;
 
 	protected Controller(FileIO fileIO, Config config, Translator translator) {
 		this(fileIO, config, translator, null);
@@ -552,6 +554,14 @@ public class Controller {
 
 	public static String translate(String key) {
 		return controller.translator.get(key);
+	}
+
+	public static void setPrimaryStage(Stage stage) {
+		controller.primaryStage = stage;
+	}
+
+	public static Stage getPrimaryStage() {
+		return controller.primaryStage;
 	}
 
 }
