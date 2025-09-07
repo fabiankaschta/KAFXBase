@@ -3,14 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openjfx</groupId>
     <artifactId>kafx</artifactId>
-    <version>0.9.6</version>
+    <version>0.9.7</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>23</maven.compiler.release>
-        <javafx.version>21</javafx.version>
-        <javafx.plugin.version>0.0.8</javafx.plugin.version>
+        <javafx.version>23</javafx.version>
+        <compiler.plugin.version>3.14.0</compiler.plugin.version>
+        <resources.plugin.version>3.3.1</resources.plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -34,12 +35,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>${compiler.plugin.version}</version>
             </plugin>
 			<plugin>
             	<groupId>org.apache.maven.plugins</groupId>
             	<artifactId>maven-resources-plugin</artifactId>
-            	<version>3.3.1</version>
+                <version>${resources.plugin.version}</version>
 			</plugin>
         </plugins>
     </build>
