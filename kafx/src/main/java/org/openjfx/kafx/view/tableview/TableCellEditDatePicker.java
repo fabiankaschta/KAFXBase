@@ -105,8 +105,22 @@ public class TableCellEditDatePicker<S> extends TableCellEditControl<S, LocalDat
 
 	@Override
 	protected DatePicker createControl() {
-		DatePicker field = new DatePicker(this.getItem());
+		DatePicker field = new CustomDatePicker(this.getItem());
 		field.getStyleClass().add("date-picker-table-cell");
 		return field;
+	}
+
+	private static class CustomDatePicker extends DatePicker {
+
+		public CustomDatePicker(LocalDate localDate) {
+			super(localDate);
+			// without this, old value overrides delete after changing table cell
+			this.getEditor().textProperty().addListener((_, _, text) -> {
+				if (text == null || text.isEmpty()) {
+					this.setValue(null);
+				}
+			});
+		}
+
 	}
 }
