@@ -1,6 +1,6 @@
 package org.openjfx.kafx.view.pane;
 
-import org.openjfx.kafx.controller.Controller;
+import org.openjfx.kafx.controller.FontSizeController;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -14,7 +14,7 @@ public abstract class AddTabPane extends CustomDragTabPane {
 	private class AddTab extends Tab {
 		private AddTab() {
 			Label label = new Label("+");
-			Controller.fontSizeProperty()
+			FontSizeController.fontSizeProperty()
 					.subscribe(fontSize -> label.setStyle("-fx-font-size: " + (fontSize.doubleValue() * 1.5)));
 			setGraphic(label);
 			setClosable(false);

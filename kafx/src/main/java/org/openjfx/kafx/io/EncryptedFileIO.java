@@ -15,7 +15,7 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
-import org.openjfx.kafx.controller.Controller;
+import org.openjfx.kafx.controller.EncryptionController;
 
 public abstract class EncryptedFileIO extends FileIO {
 
@@ -25,13 +25,13 @@ public abstract class EncryptedFileIO extends FileIO {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(file);
 			byte[] iv = fileInputStream.readNBytes(16); // iv length
-			SecretKey secretKey = Controller.requestSecretKey();
-			Cipher cipher = Controller.getEncryptionHelper().getCipher();
+			SecretKey secretKey = EncryptionController.requestSecretKey();
+			Cipher cipher = EncryptionController.getCipher();
 			cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
 			try {
 				return read(new CipherInputStream(fileInputStream, cipher));
 			} catch (StreamCorruptedException e) {
-				Controller.invalidPassword();
+				EncryptionController.invalidPassword();
 				return readFromFile(file);
 			}
 		} catch (NoSuchElementException e) {
@@ -41,8 +41,8 @@ public abstract class EncryptedFileIO extends FileIO {
 
 	@Override
 	public boolean writeToFile(File file) throws InvalidKeyException, IOException {
-		SecretKey secretKey = Controller.getSecretKey();
-		Cipher cipher = Controller.getEncryptionHelper().getCipher();
+		SecretKey secretKey = EncryptionController.getSecretKey();
+		Cipher cipher = EncryptionController.getCipher();
 		FileOutputStream fileOutputStream = new FileOutputStream(file);
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 		fileOutputStream.write(cipher.getIV());

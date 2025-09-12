@@ -4,7 +4,6 @@ module org.openjfx.kafx {
 	exports org.openjfx.kafx.controller;
 	exports org.openjfx.kafx.io;
 	exports org.openjfx.kafx.lang;
-	exports org.openjfx.kafx.secure;
 	exports org.openjfx.kafx.view.alert;
 	exports org.openjfx.kafx.view.color;
 	exports org.openjfx.kafx.view.control;

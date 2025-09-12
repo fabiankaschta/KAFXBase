@@ -2,7 +2,8 @@ package org.openjfx.kafx.view.dialog;
 
 import javax.crypto.SecretKey;
 
-import org.openjfx.kafx.controller.Controller;
+import org.openjfx.kafx.controller.EncryptionController;
+import org.openjfx.kafx.controller.TranslationController;
 import org.openjfx.kafx.view.dialog.userinput.UserInputTextInput;
 
 import javafx.scene.control.ButtonType;
@@ -14,12 +15,12 @@ public class DialogSetPassword extends DialogUserInput<SecretKey> {
 	private final UserInputTextInput passwordConfirm;
 
 	public DialogSetPassword() {
-		super(Controller.translate("dialog_setPassword_title"));
+		super(TranslationController.translate("dialog_setPassword_title"));
 
 		this.password = new UserInputTextInput(new PasswordField());
-		super.addInput(this.password, Controller.translate("dialog_setPassword_password"));
+		super.addInput(this.password, TranslationController.translate("dialog_setPassword_password"));
 		this.passwordConfirm = new UserInputTextInput(new PasswordField());
-		super.addInput(this.passwordConfirm, Controller.translate("dialog_setPassword_passwordConfirm"));
+		super.addInput(this.passwordConfirm, TranslationController.translate("dialog_setPassword_passwordConfirm"));
 
 		ButtonType cancelButtonType = ButtonType.CANCEL;
 		ButtonType okButtonType = ButtonType.OK;
@@ -30,7 +31,7 @@ public class DialogSetPassword extends DialogUserInput<SecretKey> {
 
 		this.setResultConverter(dialogButton -> {
 			if (dialogButton == okButtonType) {
-				return Controller.getEncryptionHelper().generateFromPassword(this.password.getValue().trim());
+				return EncryptionController.generateFromPassword(this.password.getValue().trim());
 			} else {
 				return null;
 			}

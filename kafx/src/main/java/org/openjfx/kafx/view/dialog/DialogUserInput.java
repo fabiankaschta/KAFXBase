@@ -1,6 +1,7 @@
 package org.openjfx.kafx.view.dialog;
 
 import org.openjfx.kafx.controller.Controller;
+import org.openjfx.kafx.controller.FontSizeController;
 import org.openjfx.kafx.view.dialog.userinput.UserInput;
 import org.openjfx.kafx.view.tableview.LabeledUserInputTableView;
 
@@ -21,7 +22,7 @@ public abstract class DialogUserInput<T> extends Dialog<T> {
 		this.grid.widthProperty().addListener((_, _, _) -> this.getDialogPane().getScene().getWindow().sizeToScene());
 		this.grid.heightProperty().addListener((_, _, _) -> this.getDialogPane().getScene().getWindow().sizeToScene());
 		this.getDialogPane().setContent(grid);
-		Controller.fontSizeProperty()
+		FontSizeController.fontSizeProperty()
 				.subscribe(fontSize -> this.getDialogPane().setStyle("-fx-font-size: " + fontSize));
 		this.initOwner(Controller.getPrimaryStage());
 	}

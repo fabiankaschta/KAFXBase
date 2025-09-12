@@ -1,4 +1,4 @@
-package org.openjfx.kafx.secure;
+package org.openjfx.kafx.controller;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -11,10 +11,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.openjfx.kafx.controller.Controller;
-
-// PBE / AES-256
-public class EncryptionHelper {
+//PBE / AES-256
+public class EncryptionControllerDefault extends EncryptionController {
 
 	private final static String SecretKeyFactoryMode = "PBKDF2WithHmacSHA256";
 	private final static String cipherTransformation = "AES/CBC/PKCS5Padding";
@@ -29,29 +27,31 @@ public class EncryptionHelper {
 	 * 
 	 * @param salt 8 bytes
 	 */
-	public EncryptionHelper(byte[] salt) {
+	public EncryptionControllerDefault(byte[] salt) {
 		Cipher cipher = null;
 		try {
 			cipher = Cipher.getInstance(cipherTransformation);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			Controller.exception(e);
+			ExceptionController.exception(e);
 		}
 		this.cipher = cipher;
 		this.salt = salt;
 	}
 
-	public Cipher getCipher() {
+	@Override
+	public Cipher handleGetCipher() {
 		return this.cipher;
 	}
 
-	public SecretKey generateFromPassword(String password) {
+	@Override
+	public SecretKey handleGenerateFromPassword(String password) {
 		KeySpec keyspec = new PBEKeySpec(password.toCharArray(), this.salt, iterationCount, keyLength);
 		SecretKeyFactory factory;
 		try {
 			factory = SecretKeyFactory.getInstance(SecretKeyFactoryMode);
 			return new SecretKeySpec(factory.generateSecret(keyspec).getEncoded(), secretKeySpecAlgorithm);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			Controller.exception(e);
+			ExceptionController.exception(e);
 			return null;
 		}
 	}

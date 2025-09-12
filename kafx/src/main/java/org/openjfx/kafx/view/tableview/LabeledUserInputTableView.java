@@ -1,6 +1,6 @@
 package org.openjfx.kafx.view.tableview;
 
-import org.openjfx.kafx.controller.Controller;
+import org.openjfx.kafx.controller.FontSizeController;
 import org.openjfx.kafx.view.dialog.userinput.UserInput;
 
 import javafx.application.Platform;
@@ -52,7 +52,7 @@ public class LabeledUserInputTableView extends TableView<UserInput<?>> {
 	private final ObservableList<UserInput<?>> userInputs = FXCollections.observableArrayList();
 
 	public LabeledUserInputTableView() {
-		this.minHeight.bind(Controller.fontSizeProperty().multiply(3));
+		this.minHeight.bind(FontSizeController.fontSizeProperty().multiply(3));
 		TableColumn<UserInput<?>, Node> labelColumn = new TableColumn<>();
 		labelColumn.setCellFactory(_ -> new TableCellNode());
 		labelColumn.setCellValueFactory(

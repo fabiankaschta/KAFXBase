@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.openjfx.kafx.controller.Controller;
+import org.openjfx.kafx.controller.ExceptionController;
 
 public class CSVParser<T> {
 
@@ -52,7 +52,7 @@ public class CSVParser<T> {
 					try {
 						reader.close();
 					} catch (IOException e) {
-						Controller.exception(e);
+						ExceptionController.exception(e);
 					}
 				});
 	}

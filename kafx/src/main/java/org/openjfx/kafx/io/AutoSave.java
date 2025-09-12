@@ -1,6 +1,6 @@
 package org.openjfx.kafx.io;
 
-import org.openjfx.kafx.controller.Controller;
+import org.openjfx.kafx.controller.FileController;
 
 import javafx.animation.Animation.Status;
 import javafx.animation.PauseTransition;
@@ -37,7 +37,7 @@ public class AutoSave {
 	private AutoSave(Duration duration) {
 		this.timer.setDuration(duration);
 		this.timer.setCycleCount(PauseTransition.INDEFINITE);
-		this.timer.setOnFinished(_ -> Controller.writeToFile());
+		this.timer.setOnFinished(_ -> FileController.writeToFile());
 	}
 
 }
