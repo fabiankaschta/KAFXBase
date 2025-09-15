@@ -41,12 +41,16 @@ public abstract class EncryptedFileIO extends FileIO {
 
 	@Override
 	public boolean writeToFile(File file) throws InvalidKeyException, IOException {
-		SecretKey secretKey = EncryptionController.getSecretKey();
-		Cipher cipher = EncryptionController.getCipher();
-		FileOutputStream fileOutputStream = new FileOutputStream(file);
-		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-		fileOutputStream.write(cipher.getIV());
-		return write(new CipherOutputStream(fileOutputStream, cipher));
+		try {
+			SecretKey secretKey = EncryptionController.getSecretKey();
+			Cipher cipher = EncryptionController.getCipher();
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			fileOutputStream.write(cipher.getIV());
+			return write(new CipherOutputStream(fileOutputStream, cipher));
+		} catch (NoSuchElementException e) {
+			return false;
+		}
 	}
 
 }
