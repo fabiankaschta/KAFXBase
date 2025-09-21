@@ -3,13 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openjfx</groupId>
     <artifactId>kafx</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>24</maven.compiler.release>
         <javafx.version>24</javafx.version>
+        <pf4j.version>3.13.0</pf4j.version>
         <compiler.plugin.version>3.14.0</compiler.plugin.version>
         <resources.plugin.version>3.3.1</resources.plugin.version>
     </properties>
@@ -29,6 +30,11 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+		<dependency>
+		    <groupId>org.pf4j</groupId>
+		    <artifactId>pf4j</artifactId>
+		    <version>${pf4j.version}</version>
+		</dependency>
     </dependencies>
     <build>
         <plugins>
