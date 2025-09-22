@@ -1,5 +1,6 @@
 package org.openjfx.kafx.controller;
 
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 import org.openjfx.kafx.lang.Translator;
@@ -29,6 +30,12 @@ public class TranslationController extends Controller {
 
 	public static boolean isInitialized() {
 		return controller != null;
+	}
+
+	public static void addBundle(ResourceBundle bundle) {
+		if (isInitialized()) {
+			controller.translator.addBundle(bundle);
+		}
 	}
 
 	public static String translate(String key) {
