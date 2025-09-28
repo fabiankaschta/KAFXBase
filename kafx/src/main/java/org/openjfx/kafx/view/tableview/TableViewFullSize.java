@@ -13,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 
 public class TableViewFullSize<T> extends TableView<T> {
 
@@ -48,7 +49,11 @@ public class TableViewFullSize<T> extends TableView<T> {
 			scrollBarHorizontal.setVisible(false);
 			TableHeaderRow header = (TableHeaderRow) this.queryAccessibleAttribute(AccessibleAttribute.HEADER);
 			// consume drag (resize) attempts
-			header.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> e.consume());
+			header.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+				if(e.getTarget() instanceof Rectangle) {
+					e.consume();
+				}
+			});
 			ObservableList<TableColumnHeader> columnHeaders = header.getRootHeader().getColumnHeaders();
 			columnHeaders.addListener((ListChangeListener<TableColumnHeader>) _ -> {
 				for (TableColumnHeader ch : columnHeaders) {
