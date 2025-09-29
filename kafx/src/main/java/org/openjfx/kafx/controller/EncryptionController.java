@@ -17,7 +17,7 @@ public abstract class EncryptionController extends Controller {
 	}
 
 	public static void init(EncryptionController controller) {
-		log(DEBUG, "init encryption controller");
+		LogController.log(LogController.DEBUG, "init encryption controller");
 		EncryptionController.controller = controller;
 	}
 
@@ -31,7 +31,7 @@ public abstract class EncryptionController extends Controller {
 		if (!isInitialized()) {
 			return null;
 		} else {
-			log(Controller.DEBUG, "requesting password");
+			LogController.log(LogController.DEBUG, "requesting password");
 			return controller.secretKey = new DialogEnterPassword().showAndWait().orElseThrow();
 		}
 	}
@@ -41,10 +41,10 @@ public abstract class EncryptionController extends Controller {
 			return null;
 		} else {
 			if (controller.secretKey == null) {
-				log(Controller.DEBUG, "setting new password");
+				LogController.log(LogController.DEBUG, "setting new password");
 				controller.secretKey = new DialogSetPassword().showAndWait().orElseThrow();
 			} else {
-				log(Controller.DEBUG, "using password");
+				LogController.log(LogController.DEBUG, "using password");
 			}
 			return controller.secretKey;
 		}
@@ -52,7 +52,7 @@ public abstract class EncryptionController extends Controller {
 
 	public static void clearSecretKey() {
 		if (isInitialized()) {
-			log(Controller.DEBUG, "removing secret key");
+			LogController.log(LogController.DEBUG, "removing secret key");
 			controller.secretKey = null;
 		}
 	}
@@ -71,7 +71,7 @@ public abstract class EncryptionController extends Controller {
 		if (!isInitialized()) {
 			return null;
 		} else {
-			log(Controller.DEBUG, "generating secret key from password");
+			LogController.log(LogController.DEBUG, "generating secret key from password");
 			return controller.handleGenerateFromPassword(password);
 		}
 	}
@@ -82,7 +82,7 @@ public abstract class EncryptionController extends Controller {
 		if (!isInitialized()) {
 			return;
 		} else {
-			log(Controller.DEBUG, "password invalid");
+			LogController.log(LogController.DEBUG, "password invalid");
 			controller.handleInvalidPassword();
 		}
 	}
@@ -98,10 +98,10 @@ public abstract class EncryptionController extends Controller {
 			SecretKey oldKey = controller.secretKey; // save old password
 			controller.secretKey = null; // remove old password
 			try {
-				log(Controller.DEBUG, "changing password - successful");
+				LogController.log(LogController.DEBUG, "changing password - successful");
 				getSecretKey(); // set new password
 			} catch (NoSuchElementException e) {
-				log(Controller.DEBUG, "changing password - unsuccessful");
+				LogController.log(LogController.DEBUG, "changing password - unsuccessful");
 				controller.secretKey = oldKey;
 			}
 			FileController.saveFile(); // save file

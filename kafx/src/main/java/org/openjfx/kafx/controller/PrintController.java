@@ -16,7 +16,7 @@ public abstract class PrintController extends Controller {
 	}
 
 	public static void init(PrintController controller) {
-		log(DEBUG, "init print controller");
+		LogController.log(LogController.DEBUG, "init print controller");
 		PrintController.controller = controller;
 	}
 
@@ -26,7 +26,7 @@ public abstract class PrintController extends Controller {
 
 	public static void print() {
 		if (isInitialized()) {
-			log(DEBUG, "print started");
+			LogController.log(LogController.DEBUG, "print started");
 			PrinterJob job = PrinterJob.createPrinterJob();
 			job.getJobSettings().setPageRanges(new PageRange(1, 1));
 			Node root = controller.getPrintableNode();
@@ -52,21 +52,21 @@ public abstract class PrintController extends Controller {
 						boolean success = job.printPage(root);
 						if (success) {
 							job.endJob();
-							log(DEBUG, "print successful");
+							LogController.log(LogController.DEBUG, "print successful");
 						} else {
-							log(DEBUG, "print unsuccessful");
+							LogController.log(LogController.DEBUG, "print unsuccessful");
 							job.cancelJob();
 						}
 						root.getTransforms().remove(scale);
 					} else {
-						log(DEBUG, "print aborted - cancelled");
+						LogController.log(LogController.DEBUG, "print aborted - cancelled");
 					}
 				} else {
-					log(DEBUG, "print aborted - cancelled");
+					LogController.log(LogController.DEBUG, "print aborted - cancelled");
 				}
 				root.setManaged(true);
 			} else {
-				log(DEBUG, "print aborted - nothing to print");
+				LogController.log(LogController.DEBUG, "print aborted - nothing to print");
 			}
 		}
 	}

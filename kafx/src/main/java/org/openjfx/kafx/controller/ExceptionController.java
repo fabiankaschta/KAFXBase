@@ -16,7 +16,7 @@ public class ExceptionController extends Controller {
 	}
 
 	public static void init(ExceptionController controller) {
-		log(DEBUG, "init exception controller");
+		LogController.log(LogController.DEBUG, "init exception controller");
 		ExceptionController.controller = controller;
 	}
 
@@ -26,7 +26,7 @@ public class ExceptionController extends Controller {
 
 	public static void exception(Exception e) {
 		if (isInitialized()) {
-			log(Level.SEVERE, e.getMessage());
+			LogController.log(Level.SEVERE, e.getMessage());
 			controller.handleException(e);
 		}
 	}

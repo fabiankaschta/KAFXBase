@@ -41,7 +41,7 @@ public class ConfigController extends Controller {
 	}
 
 	public static void init(ConfigController controller) {
-		log(DEBUG, "init config controller");
+		LogController.log(LogController.DEBUG, "init config controller");
 		ConfigController.controller = controller;
 		putIfNotExists("WIDTH", String.valueOf(800));
 		putIfNotExists("HEIGHT", String.valueOf(600));
@@ -62,7 +62,7 @@ public class ConfigController extends Controller {
 
 	public static void remove(String option) {
 		if (isInitialized()) {
-			log(DEBUG, "config remove " + option);
+			LogController.log(LogController.DEBUG, "config remove " + option);
 			controller.properties.remove(option.toString());
 		}
 	}
@@ -77,7 +77,7 @@ public class ConfigController extends Controller {
 
 	public static void set(String option, String value) {
 		if (isInitialized()) {
-			log(DEBUG, "config set " + option + " to " + value);
+			LogController.log(LogController.DEBUG, "config set " + option + " to " + value);
 			controller.properties.setProperty(option.toString(), value);
 		}
 	}
@@ -94,9 +94,9 @@ public class ConfigController extends Controller {
 		if (isInitialized()) {
 			try {
 				controller.properties.store(new FileOutputStream(controller.file), "");
-				log(DEBUG, "storing config to file " + controller.file.getPath() + " - successful");
+				LogController.log(LogController.DEBUG, "storing config to file " + controller.file.getPath() + " - successful");
 			} catch (IOException e) {
-				log(DEBUG, "storing config to file " + controller.file.getPath() + " - exception");
+				LogController.log(LogController.DEBUG, "storing config to file " + controller.file.getPath() + " - exception");
 				ExceptionController.exception(e);
 			}
 		}

@@ -24,7 +24,7 @@ public class TranslationController extends Controller {
 	}
 
 	public static void init(TranslationController controller) {
-		log(DEBUG, "init translation controller");
+		LogController.log(LogController.DEBUG, "init translation controller");
 		TranslationController.controller = controller;
 	}
 
@@ -45,7 +45,7 @@ public class TranslationController extends Controller {
 			try {
 				return controller.translator.get(key);
 			} catch (Exception e) {
-				Controller.log(Level.WARNING,
+				LogController.log(Level.WARNING,
 						"missing lang for " + key + " in locale " + controller.translator.getLocale());
 				return '[' + key + ']';
 			}

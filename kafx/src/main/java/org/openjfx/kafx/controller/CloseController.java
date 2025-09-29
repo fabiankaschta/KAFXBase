@@ -17,7 +17,7 @@ public class CloseController extends Controller {
 	}
 
 	public static void init(CloseController controller) {
-		log(DEBUG, "init close controller");
+		LogController.log(LogController.DEBUG, "init close controller");
 		CloseController.controller = controller;
 	}
 
@@ -31,7 +31,7 @@ public class CloseController extends Controller {
 
 	public static void close(Event event) {
 		if (isInitialized()) {
-			log(DEBUG, "close event");
+			LogController.log(LogController.DEBUG, "close event");
 			controller.handleClose(event);
 		}
 	}
@@ -40,19 +40,19 @@ public class CloseController extends Controller {
 		if (ChangeController.hasChanges()) {
 			new AlertSaveChanges().showAndWait().ifPresent(response -> {
 				if (response == ButtonType.OK) {
-					log(DEBUG, "close save changes - ok");
+					LogController.log(LogController.DEBUG, "close save changes - ok");
 					if (!FileController.writeToFile()) {
 						event.consume();
 					}
 				} else if (response == ButtonType.CANCEL) {
 					event.consume();
-					log(DEBUG, "close save changes - cancel");
+					LogController.log(LogController.DEBUG, "close save changes - cancel");
 				} else if (response == ButtonType.NO) {
-					log(DEBUG, "close save changes - no");
+					LogController.log(LogController.DEBUG, "close save changes - no");
 				}
 			});
 		} else {
-			log(DEBUG, "close no changes");
+			LogController.log(LogController.DEBUG, "close no changes");
 		}
 		if (!event.isConsumed()) {
 			ConfigController.store();

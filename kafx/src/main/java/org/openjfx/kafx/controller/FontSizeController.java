@@ -18,7 +18,7 @@ public class FontSizeController extends Controller {
 	}
 
 	public static void init(FontSizeController controller) {
-		log(DEBUG, "init font size controller");
+		LogController.log(LogController.DEBUG, "init font size controller");
 		FontSizeController.controller = controller;
 	}
 
@@ -46,7 +46,7 @@ public class FontSizeController extends Controller {
 
 	public static void setFontSize(int fontSize) {
 		if (isInitialized()) {
-			log(DEBUG, "set font size: " + fontSize);
+			LogController.log(LogController.DEBUG, "set font size: " + fontSize);
 			controller.fontSize.set(fontSize);
 		}
 	}

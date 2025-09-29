@@ -21,7 +21,7 @@ public class PluginController extends Controller {
 	}
 
 	public static void init(PluginController controller) {
-		log(DEBUG, "init plugin controller");
+		LogController.log(LogController.DEBUG, "init plugin controller");
 		PluginController.controller = controller;
 	}
 
@@ -33,7 +33,7 @@ public class PluginController extends Controller {
 		if (!isInitialized()) {
 			return null;
 		} else {
-			log(DEBUG, "retrieving plugin extensions for class " + type);
+			LogController.log(LogController.DEBUG, "retrieving plugin extensions for class " + type);
 			return controller.handleGetExtensions(type);
 		}
 	}

@@ -22,29 +22,29 @@ public class ChangeController extends Controller {
 	}
 
 	public static void init(ChangeController controller) {
-		log(DEBUG, "init change controller");
+		LogController.log(LogController.DEBUG, "init change controller");
 		ChangeController.controller = controller;
 	}
 
 	private long changeCounter = 0;
 
 	public final static ChangeListener<Object> LISTENER_UNSAVED_CHANGES = (o, a, b) -> {
-		log(DEBUG, o + " " + a + " -> " + b);
+		LogController.log(LogController.DEBUG, o + " " + a + " -> " + b);
 		change();
 	};
 	public final static ListChangeListener<Object> LISTLISTENER_UNSAVED_CHANGES = c -> {
-		log(DEBUG, c.toString());
+		LogController.log(LogController.DEBUG, c.toString());
 		change();
 	};
 	public final static MapChangeListener<Object, Object> MAPLISTENER_UNSAVED_CHANGES = m -> {
-		log(DEBUG, m.toString());
+		LogController.log(LogController.DEBUG, m.toString());
 		change();
 	};
 
 	public static ChangeListener<Object> getConditionalListenerUnsavedChanges(Supplier<Boolean> condition) {
 		ChangeListener<Object> listener = (o, a, b) -> {
 			if (condition.get()) {
-				log(DEBUG, o + " " + a + " -> " + b);
+				LogController.log(LogController.DEBUG, o + " " + a + " -> " + b);
 				change();
 			}
 		};
@@ -65,7 +65,7 @@ public class ChangeController extends Controller {
 
 	private static void change() {
 		if (isInitialized()) {
-			log(DEBUG, "change registered");
+			LogController.log(LogController.DEBUG, "change registered");
 			controller.incChangeCounter();
 			controller.handleChange();
 		}
@@ -76,7 +76,7 @@ public class ChangeController extends Controller {
 
 	public static void resetChanges() {
 		if (isInitialized()) {
-			log(DEBUG, "changes reset");
+			LogController.log(LogController.DEBUG, "changes reset");
 			controller.resetChangeCounter();
 			controller.handleChange();
 		}

@@ -22,7 +22,7 @@ public abstract class FileController extends Controller {
 	}
 
 	public static void init(FileController controller) {
-		log(DEBUG, "init file controller");
+		LogController.log(LogController.DEBUG, "init file controller");
 		FileController.controller = controller;
 	}
 
@@ -37,20 +37,20 @@ public abstract class FileController extends Controller {
 			try {
 				boolean result = controller.handleReadFromFile(new File(ConfigController.get("LAST_FILE")));
 				if (result) {
-					log(DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - successful");
+					LogController.log(LogController.DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - successful");
 					ChangeController.resetChanges();
 				} else {
-					log(DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - unsuccessful");
+					LogController.log(LogController.DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - unsuccessful");
 					ConfigController.remove("LAST_FILE");
 				}
 				return result;
 			} catch (FileNotFoundException e) {
-				log(DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - not found");
+				LogController.log(LogController.DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - not found");
 				new AlertLastFileMissing(ConfigController.get("LAST_FILE")).showAndWait();
 				ConfigController.remove("LAST_FILE");
 				return false;
 			} catch (Exception e) {
-				log(DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - exception");
+				LogController.log(LogController.DEBUG, "read from last file " + ConfigController.get("LAST_FILE") + " - exception");
 				ExceptionController.exception(e);
 				return false;
 			}
@@ -66,16 +66,16 @@ public abstract class FileController extends Controller {
 			try {
 				boolean result = controller.handleReadFromFile(file);
 				if (result) {
-					log(DEBUG, "read from file " + file.getPath() + " - successful");
+					LogController.log(LogController.DEBUG, "read from file " + file.getPath() + " - successful");
 					ConfigController.set("LAST_FILE", file.getPath());
 					ChangeController.resetChanges();
 				} else {
-					log(DEBUG, "read from file " + file.getPath() + " - successful");
+					LogController.log(LogController.DEBUG, "read from file " + file.getPath() + " - successful");
 					ConfigController.remove("LAST_FILE");
 				}
 				return result;
 			} catch (Exception e) {
-				log(DEBUG, "read from file " + file.getPath() + " - exception");
+				LogController.log(LogController.DEBUG, "read from file " + file.getPath() + " - exception");
 				ExceptionController.exception(e);
 				return false;
 			}
@@ -89,16 +89,16 @@ public abstract class FileController extends Controller {
 			try {
 				boolean result = controller.handleReadFromFile(new File(filePath));
 				if (result) {
-					log(DEBUG, "read from file " + filePath + " - successful");
+					LogController.log(LogController.DEBUG, "read from file " + filePath + " - successful");
 					ConfigController.set("LAST_FILE", filePath);
 					ChangeController.resetChanges();
 				} else {
-					log(DEBUG, "read from file " + filePath + " - successful");
+					LogController.log(LogController.DEBUG, "read from file " + filePath + " - successful");
 					ConfigController.remove("LAST_FILE");
 				}
 				return result;
 			} catch (Exception e) {
-				log(DEBUG, "read from file " + filePath + " - exception");
+				LogController.log(LogController.DEBUG, "read from file " + filePath + " - exception");
 				ExceptionController.exception(e);
 				return false;
 			}
@@ -117,10 +117,10 @@ public abstract class FileController extends Controller {
 			if (ConfigController.exists("LAST_FILE")) {
 				try {
 					result = controller.handlewriteToFile(new File(ConfigController.get("LAST_FILE")));
-					log(DEBUG, "write to file " + ConfigController.get("LAST_FILE")
+					LogController.log(LogController.DEBUG, "write to file " + ConfigController.get("LAST_FILE")
 							+ (result ? " - successful" : " - unsuccessful"));
 				} catch (Exception e) {
-					log(DEBUG, "write to file " + ConfigController.get("LAST_FILE") + " - exception");
+					LogController.log(LogController.DEBUG, "write to file " + ConfigController.get("LAST_FILE") + " - exception");
 					ExceptionController.exception(e);
 					return false;
 				}
@@ -129,15 +129,15 @@ public abstract class FileController extends Controller {
 				if (file != null) {
 					try {
 						result = controller.handlewriteToFile(file);
-						log(DEBUG, "write to file " + file.getPath() + (result ? " - successful" : " - unsuccessful"));
+						LogController.log(LogController.DEBUG, "write to file " + file.getPath() + (result ? " - successful" : " - unsuccessful"));
 					} catch (Exception e) {
-						log(DEBUG, "write to file " + file.getPath() + " - exception");
+						LogController.log(LogController.DEBUG, "write to file " + file.getPath() + " - exception");
 						ExceptionController.exception(e);
 						return false;
 					}
 				} else {
 					result = false;
-					log(DEBUG, "write to file - aborted");
+					LogController.log(LogController.DEBUG, "write to file - aborted");
 				}
 			}
 			if (result) {
@@ -153,14 +153,14 @@ public abstract class FileController extends Controller {
 		} else {
 			try {
 				boolean result = controller.handlewriteToFile(file);
-				log(DEBUG, "write to file " + file.getPath() + (result ? " - successful" : " - unsuccessful"));
+				LogController.log(LogController.DEBUG, "write to file " + file.getPath() + (result ? " - successful" : " - unsuccessful"));
 				if (result) {
 					ConfigController.set("LAST_FILE", file.getPath());
 					ChangeController.resetChanges();
 				}
 				return result;
 			} catch (Exception e) {
-				log(DEBUG, "write to file " + file.getPath() + " - exception");
+				LogController.log(LogController.DEBUG, "write to file " + file.getPath() + " - exception");
 				ExceptionController.exception(e);
 				return false;
 			}
@@ -173,14 +173,14 @@ public abstract class FileController extends Controller {
 		} else {
 			try {
 				boolean result = controller.handlewriteToFile(new File(filePath));
-				log(DEBUG, "write to file " + filePath + (result ? " - successful" : " - unsuccessful"));
+				LogController.log(LogController.DEBUG, "write to file " + filePath + (result ? " - successful" : " - unsuccessful"));
 				if (result) {
 					ConfigController.set("LAST_FILE", filePath);
 					ChangeController.resetChanges();
 				}
 				return result;
 			} catch (Exception e) {
-				log(DEBUG, "write to file " + filePath + " - exception");
+				LogController.log(LogController.DEBUG, "write to file " + filePath + " - exception");
 				ExceptionController.exception(e);
 				return false;
 			}
@@ -198,22 +198,22 @@ public abstract class FileController extends Controller {
 			if (ChangeController.hasChanges()) {
 				new AlertSaveChanges().showAndWait().ifPresent(response -> {
 					if (response == ButtonType.OK) {
-						log(DEBUG, "new file - save changes ok");
+						LogController.log(LogController.DEBUG, "new file - save changes ok");
 						if (writeToFile()) {
 							controller.handleNewFile();
 						} else {
 							event.consume();
 						}
 					} else if (response == ButtonType.CANCEL) {
-						log(DEBUG, "new file - save changes cancel");
+						LogController.log(LogController.DEBUG, "new file - save changes cancel");
 						event.consume();
 					} else if (response == ButtonType.NO) {
-						log(DEBUG, "new file - save changes no");
+						LogController.log(LogController.DEBUG, "new file - save changes no");
 						controller.handleNewFile();
 					}
 				});
 			} else {
-				log(DEBUG, "new file - no changes");
+				LogController.log(LogController.DEBUG, "new file - no changes");
 				controller.handleNewFile();
 			}
 		}
@@ -236,15 +236,15 @@ public abstract class FileController extends Controller {
 			if (ChangeController.hasChanges()) {
 				new AlertSaveChanges().showAndWait().ifPresent(response -> {
 					if (response == ButtonType.OK) {
-						log(DEBUG, "open file - save changes ok");
+						LogController.log(LogController.DEBUG, "open file - save changes ok");
 						if (!writeToFile()) {
 							event.consume();
 						}
 					} else if (response == ButtonType.CANCEL) {
-						log(DEBUG, "open file - save changes cancel");
+						LogController.log(LogController.DEBUG, "open file - save changes cancel");
 						event.consume();
 					} else if (response == ButtonType.NO) {
-						log(DEBUG, "open file - save changes no");
+						LogController.log(LogController.DEBUG, "open file - save changes no");
 					}
 				});
 				if (!event.isConsumed()) {
@@ -253,7 +253,7 @@ public abstract class FileController extends Controller {
 					return false;
 				}
 			} else {
-				log(DEBUG, "open file - no changes");
+				LogController.log(LogController.DEBUG, "open file - no changes");
 				return controller.handleOpenFile();
 			}
 		}
@@ -278,7 +278,7 @@ public abstract class FileController extends Controller {
 		if (!isInitialized()) {
 			return false;
 		} else {
-			log(DEBUG, "save file");
+			LogController.log(LogController.DEBUG, "save file");
 			return controller.handleSaveFile();
 		}
 	}
@@ -291,7 +291,7 @@ public abstract class FileController extends Controller {
 		if (!isInitialized()) {
 			return false;
 		} else {
-			log(DEBUG, "save file as");
+			LogController.log(LogController.DEBUG, "save file as");
 			return controller.handleSaveAs();
 		}
 	}
