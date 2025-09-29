@@ -1,6 +1,6 @@
 package org.openjfx.kafx.controller;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertiesController extends Controller {
@@ -10,14 +10,14 @@ public class PropertiesController extends Controller {
 	private final Properties properties;
 
 	protected PropertiesController() {
-		this("/org/openjfx/kafx/kafx.properties");
+		this(PropertiesController.class.getResourceAsStream("/org/openjfx/kafx/kafx.properties"));
 	}
 
-	protected PropertiesController(String path) {
+	protected PropertiesController(InputStream inputStream) {
 		this.properties = new Properties();
 		try {
-			this.properties.load(PropertiesController.class.getResourceAsStream(path));
-		} catch (IOException e) {
+			this.properties.load(inputStream);
+		} catch (Exception e) {
 			ExceptionController.exception(e);
 		}
 	}
@@ -26,8 +26,8 @@ public class PropertiesController extends Controller {
 		init(new PropertiesController());
 	}
 
-	public static void init(String path) {
-		init(new PropertiesController(path));
+	public static void init(InputStream inputStream) {
+		init(new PropertiesController(inputStream));
 	}
 
 	public static void init(PropertiesController controller) {
