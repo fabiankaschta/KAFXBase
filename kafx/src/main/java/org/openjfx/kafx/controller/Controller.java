@@ -12,6 +12,7 @@ public class Controller {
 	public static void init(String configFileName) {
 		LogController.init();
 		ExceptionController.init();
+		PropertiesController.init();
 		ConfigController.init(configFileName);
 		CloseController.init();
 		FontSizeController.init();
@@ -21,6 +22,7 @@ public class Controller {
 	public static void init(String configFilePath, String configFileName) {
 		LogController.init();
 		ExceptionController.init();
+		PropertiesController.init();
 		ConfigController.init(configFilePath, configFileName);
 		CloseController.init();
 		FontSizeController.init();
