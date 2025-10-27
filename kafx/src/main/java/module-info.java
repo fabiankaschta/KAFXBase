@@ -1,4 +1,5 @@
 module org.openjfx.kafx {
+    requires jdk.localedata;
     requires transitive javafx.controls;
 	requires transitive java.logging;
 	requires transitive org.pf4j;
