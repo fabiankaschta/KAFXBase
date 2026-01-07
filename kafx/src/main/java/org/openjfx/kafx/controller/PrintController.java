@@ -39,8 +39,8 @@ public abstract class PrintController extends Controller {
 						root.setManaged(false);
 						pageLayout = job.getJobSettings().getPageLayout();
 
-						double width = root.getLayoutBounds().getWidth();
-						double height = root.getLayoutBounds().getHeight();
+						double width = root.prefWidth(-1);
+						double height = root.prefHeight(-1);
 						PrintResolution resolution = job.getJobSettings().getPrintResolution();
 						width /= resolution.getFeedResolution();
 						height /= resolution.getCrossFeedResolution();
@@ -48,6 +48,7 @@ public abstract class PrintController extends Controller {
 						double scaleY = pageLayout.getPrintableHeight() / height / 600;
 						Scale scale = new Scale(Math.min(scaleX, scaleY), Math.min(scaleX, scaleY));
 						root.getTransforms().add(scale);
+						root.autosize();
 
 						boolean success = job.printPage(root);
 						if (success) {
