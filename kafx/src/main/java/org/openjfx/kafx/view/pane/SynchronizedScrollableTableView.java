@@ -110,9 +110,9 @@ public class SynchronizedScrollableTableView<T> extends BorderPane {
 		centerScrollBarHorizontal.visibleProperty().addListener((_, oldValue, newValue) -> {
 			if (!oldValue && newValue) {
 				// FIXME scroll bar gets height of 100 sometimes so 13 is fixed here
-				left.setPadding(new Insets(0, 0, 13, 0));
+				left.setPadding(new Insets(0, 0, 14, 0));
 			} else {
-				left.setPadding(new Insets(0, 0, 1, 0));
+				left.setPadding(new Insets(0, 0, 0, 0));
 			}
 		});
 		// end scrollBars
