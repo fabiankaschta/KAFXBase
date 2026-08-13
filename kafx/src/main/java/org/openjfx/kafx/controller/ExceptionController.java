@@ -24,15 +24,15 @@ public class ExceptionController extends Controller {
 		return controller != null;
 	}
 
-	public static void exception(Exception e) {
+	public static void exception(Throwable t) {
 		if (isInitialized()) {
-			LogController.log(Level.SEVERE, e.getMessage());
-			controller.handleException(e);
+			LogController.log(Level.SEVERE, t.getMessage());
+			controller.handleException(t);
 		}
 	}
 
-	protected void handleException(Exception e) {
-		new AlertException(e).showAndWait();
+	protected void handleException(Throwable t) {
+		new AlertException(t).showAndWait();
 	}
 
 }
