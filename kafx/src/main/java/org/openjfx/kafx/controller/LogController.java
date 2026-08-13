@@ -1,6 +1,9 @@
 package org.openjfx.kafx.controller;
 
+import java.io.IOException;
+import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -12,7 +15,39 @@ public class LogController extends Controller {
 
 	protected LogController() {
 		logger.setUseParentHandlers(false);
-		logger.addHandler(logHandler);
+		Formatter logFormatter = new Formatter() {
+
+			@Override
+			public String format(LogRecord record) {
+				StringBuilder builder = new StringBuilder();
+				builder.append(record.getLevel() + ": ");
+				builder.append(formatMessage(record));
+				builder.append(System.lineSeparator());
+				return builder.toString();
+			}
+		};
+		logger.addHandler(new StreamHandler(System.out, logFormatter) {
+
+			@Override
+			public synchronized void publish(LogRecord record) {
+				super.publish(record);
+				super.flush();
+			}
+		});
+		try {
+			FileHandler fileHandler = new FileHandler("%h/.gradefx.log") {
+				
+				@Override
+				public synchronized void publish(LogRecord record) {
+					super.publish(record);
+					super.flush();
+				}
+			};
+			fileHandler.setFormatter(logFormatter);
+			logger.addHandler(fileHandler);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, e.getMessage());
+		}
 	}
 
 	public static void init() {
@@ -32,27 +67,6 @@ public class LogController extends Controller {
 	public static final Level DEBUG = new Level("DEBUG", Level.FINE.intValue()) {
 	};
 
-	private final static Formatter logFormatter = new Formatter() {
-
-		@Override
-		public String format(LogRecord record) {
-			StringBuilder builder = new StringBuilder();
-			builder.append(record.getLevel() + ": ");
-			builder.append(formatMessage(record));
-			builder.append(System.lineSeparator());
-			return builder.toString();
-		}
-	};
-
-	private final static StreamHandler logHandler = new StreamHandler(System.out, logFormatter) {
-
-		@Override
-		public synchronized void publish(LogRecord record) {
-			super.publish(record);
-			super.flush();
-		}
-	};
-
 	private final static Logger logger = Logger.getLogger("kafx.controller.logger");
 
 	public static void log(Level level, String message) {
@@ -62,10 +76,14 @@ public class LogController extends Controller {
 	public static void setDebugMode(boolean enabled) {
 		if (enabled) {
 			logger.setLevel(Level.ALL);
-			logHandler.setLevel(Level.ALL);
+			for (Handler h : logger.getHandlers()) {
+				h.setLevel(Level.ALL);
+			}
 		} else {
 			logger.setLevel(Level.OFF);
-			logHandler.setLevel(Level.OFF);
+			for (Handler h : logger.getHandlers()) {
+				h.setLevel(Level.OFF);
+			}
 		}
 	}
 
