@@ -7,7 +7,6 @@ module org.openjfx.kafx {
 	exports org.openjfx.kafx.io;
 	exports org.openjfx.kafx.lang;
 	exports org.openjfx.kafx.view.alert;
-	exports org.openjfx.kafx.view.color;
 	exports org.openjfx.kafx.view.control;
 	exports org.openjfx.kafx.view.converter;
 	exports org.openjfx.kafx.view.dialog;
@@ -15,6 +14,7 @@ module org.openjfx.kafx {
 	exports org.openjfx.kafx.view.listview;
 	exports org.openjfx.kafx.view.menu;
 	exports org.openjfx.kafx.view.pane;
+	exports org.openjfx.kafx.view.style;
 	exports org.openjfx.kafx.view.tableview;
 	exports org.openjfx.kafx.view.treeview;
 }

@@ -55,23 +55,39 @@ public class TableCellEditDatePicker<S> extends TableCellEditControl<S, LocalDat
 	private final StringConverter<LocalDate> converter;
 	private final BooleanProperty allowNull = new SimpleBooleanProperty();
 
+	public TableCellEditDatePicker() {
+		this(new LocalDateStringConverter(), Pos.CENTER_LEFT, false);
+	}
+
 	public TableCellEditDatePicker(StringConverter<LocalDate> converter) {
 		this(converter, Pos.CENTER_LEFT, false);
+	}
+
+	public TableCellEditDatePicker(boolean allowNull) {
+		this(new LocalDateStringConverter(), Pos.CENTER_LEFT, allowNull);
 	}
 
 	public TableCellEditDatePicker(StringConverter<LocalDate> converter, boolean allowNull) {
 		this(converter, Pos.CENTER_LEFT, allowNull);
 	}
 
+	public TableCellEditDatePicker(Pos alignment) {
+		this(new LocalDateStringConverter(), alignment, false);
+	}
+
 	public TableCellEditDatePicker(StringConverter<LocalDate> converter, Pos alignment) {
 		this(converter, alignment, false);
+	}
+
+	public TableCellEditDatePicker(Pos alignment, boolean allowNull) {
+		this(new LocalDateStringConverter(), alignment, allowNull);
 	}
 
 	public TableCellEditDatePicker(StringConverter<LocalDate> converter, Pos alignment, boolean allowNull) {
 		this.converter = converter;
 		this.allowNull.set(allowNull);
 		this.setAlignment(alignment);
-		this.getStyleClass().add("text-input-table-cell");
+		this.getStyleClass().add("date-picker-table-cell");
 	}
 
 	public void setAllowNull(boolean allowNull) {

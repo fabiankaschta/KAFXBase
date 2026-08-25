@@ -1,5 +1,7 @@
 package org.openjfx.kafx.view.tableview;
 
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
@@ -9,7 +11,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 
-abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
+public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
+
+	public final static EventType<Event> FOCUS_LOST = new EventType<>("FOCUS_LOST");
 
 	private Control control;
 	private boolean canceled;
@@ -112,6 +116,8 @@ abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 			// if user clicks outside of table
 			if (wasFocused && isEditing()) {
 				commitEdit(getFromControl());
+				// used to determine if selection should be cleared
+				getTableView().getSelectionModel().clearSelection();
 			}
 		});
 		control.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -129,22 +135,18 @@ abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 					event.consume();
 				} else if (event.getCode() == KeyCode.RIGHT
 						|| (!event.isShiftDown() && event.getCode() == KeyCode.TAB)) {
-					commitEdit(getFromControl());
 					getTableView().fireEvent(event); // select, scroll
 					getTableView().edit(row, getTableView().getVisibleLeafColumn(col + 1));
 					event.consume();
 				} else if (event.getCode() == KeyCode.LEFT || (event.isShiftDown() && event.getCode() == KeyCode.TAB)) {
-					commitEdit(getFromControl());
 					getTableView().fireEvent(event);
 					getTableView().edit(row, getTableView().getVisibleLeafColumn(col - 1));
 					event.consume();
 				} else if (event.getCode() == KeyCode.UP) {
-					commitEdit(getFromControl());
 					getTableView().fireEvent(event);
 					getTableView().edit(row - 1, getTableView().getVisibleLeafColumn(col));
 					event.consume();
 				} else if (event.getCode() == KeyCode.DOWN) {
-					commitEdit(getFromControl());
 					getTableView().fireEvent(event);
 					getTableView().edit(row + 1, getTableView().getVisibleLeafColumn(col));
 					event.consume();
