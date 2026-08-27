@@ -16,6 +16,7 @@ public class Styles {
 			style.append("-theme-color-bright-mid: " + toHexString(deriveBrightMid(color)) + ";");
 			style.append("-theme-color-faded-heavy: " + toHexString(deriveFadedHeavy(color)) + ";");
 			style.append("-theme-color-faded-mid: " + toHexString(deriveFadedMid(color)) + ";");
+			style.append("-fx-base: -theme-color;");
 			tab.setStyle((tab.getStyle() == null ? "" : tab.getStyle()) + style.toString());
 		});
 	}

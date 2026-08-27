@@ -69,11 +69,13 @@
     -theme-color-bright-heavy: -theme-color;
     -theme-color-faded-mid: -theme-color;
     -theme-color-faded-heavy: -theme-color;
-    -fx-base: -theme-color;
 }
 .themed .scroll-pane {
     -fx-color: -theme-color;
     -fx-background: -theme-color-bright-heavy;
+}
+.themed .tab-header-area {
+    -fx-base: -theme-color;
 }
 .themed .tab-header-area > .tab-header-background {
     -fx-background-color: -theme-color-bright-mid;
