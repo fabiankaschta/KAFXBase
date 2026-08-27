@@ -73,6 +73,7 @@ public class PrintController extends Controller {
 		root.setContent(printable);
 		root.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		root.getStylesheets().add(Controller.getStylesheetURL().toExternalForm());
+		FontSizeController.fontSizeProperty().subscribe(fontSize -> root.setStyle("-fx-font-size: " + fontSize + ";"));
 		Dialog<Boolean> dialog = new Dialog<>();
 		dialog.setTitle(TranslationController.translate("dialog_printPreview_title"));
 		dialog.setDialogPane(root);
