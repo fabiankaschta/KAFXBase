@@ -12,9 +12,13 @@ import javafx.scene.control.SeparatorMenuItem;
 public class FileMenu extends Menu {
 
 	public FileMenu() {
+		this(true, true, true);
+	}
+
+	public FileMenu(boolean fileOptions, boolean printOption, boolean passwordOption) {
 		super(TranslationController.translate("menu_file_title"));
 
-		if (FileController.isInitialized()) {
+		if (fileOptions && FileController.isInitialized()) {
 			MenuItem menuItemNew = new MenuItem(TranslationController.translate("menu_file_new"));
 			menuItemNew.setOnAction(e -> FileController.newFile(e));
 			this.getItems().add(menuItemNew);
@@ -32,7 +36,7 @@ public class FileMenu extends Menu {
 			this.getItems().add(menuItemSaveAs);
 		}
 
-		if (PrintController.isInitialized()) {
+		if (printOption && PrintController.isInitialized()) {
 			if (this.getItems().size() > 0) {
 				this.getItems().add(new SeparatorMenuItem());
 			}
@@ -42,7 +46,7 @@ public class FileMenu extends Menu {
 			this.getItems().add(menuItemPrint);
 		}
 
-		if (EncryptionController.isInitialized()) {
+		if (passwordOption && EncryptionController.isInitialized()) {
 			if (this.getItems().size() > 0) {
 				this.getItems().add(new SeparatorMenuItem());
 			}
