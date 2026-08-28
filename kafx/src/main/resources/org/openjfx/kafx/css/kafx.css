@@ -4,19 +4,13 @@
 }
 
 /* allow cell highlight */
-.table-view-cell-highlight > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell {
-    -fx-table-cell-highlight: -fx-background;
-    -fx-background-color: -fx-table-cell-border-color, -fx-background, -fx-table-cell-highlight, -fx-background;
-    -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0, 0.0 1.0 1.0 0.0, 1.0 2.0 2.0 1.0;
-}
+.table-view-cell-highlight > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell,
 .table-view-cell-highlight > .virtual-flow > .clipped-container > .sheet > .table-row-cell .tableview2-cell {
     -fx-table-cell-highlight: -fx-background;
     -fx-background-color: -fx-table-cell-border-color, -fx-background, -fx-table-cell-highlight, -fx-background;
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0, 0.0 1.0 1.0 0.0, 1.0 2.0 2.0 1.0;
 }
-.table-view-cell-highlight > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:fixed-value {
-    -fx-table-cell-highlight: red;
-}
+.table-view-cell-highlight > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:fixed-value,
 .table-view-cell-highlight > .virtual-flow > .clipped-container > .sheet > .table-row-cell .tableview2-cell:fixed-value {
     -fx-table-cell-highlight: red;
 }
@@ -96,8 +90,12 @@
 .themed .table-cell:faint-selection,
 .themed .tableview2-cell:faint-selection {
     -fx-font-weight: bold;
-	-fx-control-inner-background: -theme-color-bright-mid;
-	-fx-control-inner-background-alt: -theme-color-bright-mid;
+	-fx-control-inner-background: -theme-color-bright-heavy;
+	-fx-control-inner-background-alt: -theme-color-bright-heavy;
+}
+.themed .table-cell:focused,
+.themed .tableview2-cell:focused {
+    -fx-background-color: -fx-table-cell-border-color, -fx-background;
 }
 .themed .table-view .column-header,
 .themed .table-view .column-header > .label,
@@ -190,4 +188,9 @@
 }
 .tab-pane-offset > .tab-header-area {
     -fx-padding: 0.416667em 0.416667em 0.416667em 0.416667em; /* 5 2 0 5 */
+}
+/* scroll pane without focus indication */
+.scroll-pane-no-focus:focused {
+    -fx-background-insets: 0.0, 0.0, 0.0;
+    -fx-background-radius: 0.0, 0.0, 0.0;
 }
