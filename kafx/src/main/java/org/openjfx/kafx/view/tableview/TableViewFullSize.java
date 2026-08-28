@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.skin.NestedTableColumnHeader;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.input.MouseEvent;
@@ -50,7 +51,7 @@ public class TableViewFullSize<T> extends TableView<T> {
 			TableHeaderRow header = (TableHeaderRow) this.queryAccessibleAttribute(AccessibleAttribute.HEADER);
 			// consume drag (resize) attempts
 			header.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-				if(e.getTarget() instanceof Rectangle) {
+				if (e.getTarget() instanceof Rectangle) {
 					e.consume();
 				}
 			});
@@ -109,10 +110,29 @@ public class TableViewFullSize<T> extends TableView<T> {
 		double height = 0;
 		TableHeaderRow header = (TableHeaderRow) this.queryAccessibleAttribute(AccessibleAttribute.HEADER);
 		if (header != null) {
-			height = header.getHeight();
+			if (header.getRootHeader() != null && !header.getRootHeader().getColumnHeaders().isEmpty()) {
+				height = snapSizeY(calculateNestedColumnHeaderHeight(header.getRootHeader())) + header.snappedTopInset()
+						+ header.snappedBottomInset();
+			} else {
+				height = snapSizeY(header.getHeight()) + header.snappedTopInset() + header.snappedBottomInset();
+			}
 		}
-		height += this.getFixedCellSize() * this.getItems().size();
+		height += snapSizeY(this.getFixedCellSize()) * this.getItems().size();
 		return height + this.snappedTopInset() + this.snappedBottomInset();
+	}
+
+	private double calculateNestedColumnHeaderHeight(TableColumnHeader root) {
+		if (root instanceof NestedTableColumnHeader) {
+			NestedTableColumnHeader nestedRoot = (NestedTableColumnHeader) root;
+			TableColumnHeader top = (TableColumnHeader) nestedRoot.getChildrenUnmodifiable().getFirst();
+			double height = 0;
+			for (TableColumnHeader child : nestedRoot.getColumnHeaders()) {
+				height = Math.max(height, snapSizeY(calculateNestedColumnHeaderHeight(child)));
+			}
+			return top.prefHeight(-1) + height;
+		} else {
+			return root.getHeight();
+		}
 	}
 
 	@Override
