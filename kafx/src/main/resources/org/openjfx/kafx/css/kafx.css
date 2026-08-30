@@ -56,6 +56,24 @@
     -fx-table-cell-border-color: derive(-fx-selection-bar-non-focused-2, 20.0%);
 }
 
+/* fixes hardcoded use of #0b99c9 for thumb-area */
+.toggle-switch:selected .thumb-area {
+	-fx-thumb-selected-color: #0b99c9;
+    -fx-background-color:
+            linear-gradient(to bottom, derive(-fx-text-box-border, -20.0%), derive(-fx-text-box-border, -30.0%)),
+            linear-gradient(to bottom, derive(-fx-thumb-selected-color, 30.0%), -fx-thumb-selected-color);
+    -fx-background-insets: 0.0, 1.0;
+}
+
+.toggle-switch:selected:focused .thumb-area {
+    -fx-background-color:
+            -fx-focus-color,
+            linear-gradient(to bottom, derive(-fx-text-box-border, -20.0%), derive(-fx-text-box-border, -30.0%)),
+            -fx-faint-focus-color,
+            linear-gradient(to bottom, derive(-fx-thumb-selected-color, 30.0%), -fx-thumb-selected-color);
+    -fx-background-insets: -0.2, 0.0, -1.4, 1.0;
+}
+
 /* themed (colored) nodes */
 .themed {
     -theme-color: red;
@@ -78,6 +96,9 @@
 	-fx-background-color: derive(-theme-color-faded-mid, 60.0%);
 	-fx-color: derive(-theme-color-faded-mid, 20.0%);
 }
+.themed .titled-pane {
+    -fx-base: -theme-color;
+}
 .themed .table-view {
     -fx-base: -theme-color;
     -fx-background-color: -theme-color-bright-heavy;
@@ -86,6 +107,9 @@
     -fx-text-fill: -fx-text-base-color;
     -fx-selection-bar: -theme-color;
     -fx-selection-bar-non-focused-2: -theme-color-bright-mid;
+}
+.themed .toggle-switch:selected .thumb-area {
+    -fx-thumb-selected-color: -theme-color-bright-mid;
 }
 .themed .table-cell:faint-selection,
 .themed .tableview2-cell:faint-selection {
@@ -188,6 +212,13 @@
 }
 .tab-pane-offset > .tab-header-area {
     -fx-padding: 0.416667em 0.416667em 0.416667em 0.416667em; /* 5 2 0 5 */
+}
+/* titled pane without focus indication */
+.titled-pane-no-focus:focused > .title > .arrow-button > .arrow {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 1.0 0.0 -1.0 0.0, 0.0;
+    -fx-padding: 0.25em 0.3125em 0.25em 0.3125em;
+    -fx-effect: null
 }
 /* scroll pane without focus indication */
 .scroll-pane-no-focus:focused {
