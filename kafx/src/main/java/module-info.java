@@ -12,6 +12,7 @@ module org.openjfx.kafx {
 	exports org.openjfx.kafx.view.converter;
 	exports org.openjfx.kafx.view.dialog;
 	exports org.openjfx.kafx.view.dialog.userinput;
+	exports org.openjfx.kafx.view.imageview;
 	exports org.openjfx.kafx.view.listview;
 	exports org.openjfx.kafx.view.menu;
 	exports org.openjfx.kafx.view.pane;
