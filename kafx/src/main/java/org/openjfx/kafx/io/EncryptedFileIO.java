@@ -25,14 +25,14 @@ public abstract class EncryptedFileIO extends FileIO {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(file);
 			byte[] iv = fileInputStream.readNBytes(16); // iv length
-			SecretKey secretKey = EncryptionController.requestSecretKey();
+			SecretKey secretKey = EncryptionController.getSecretKey();
 			Cipher cipher = EncryptionController.getCipher();
 			cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
 			try {
 				return read(new CipherInputStream(fileInputStream, cipher));
 			} catch (StreamCorruptedException e) {
 				EncryptionController.invalidPassword();
-				return readFromFile(file);
+				return false;
 			}
 		} catch (NoSuchElementException e) {
 			return false;

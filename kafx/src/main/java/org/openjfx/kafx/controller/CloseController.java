@@ -41,7 +41,7 @@ public class CloseController extends Controller {
 			new AlertSaveChanges().showAndWait().ifPresent(response -> {
 				if (response == ButtonType.OK) {
 					LogController.log(LogController.DEBUG, "close save changes - ok");
-					if (!FileController.writeToFile()) {
+					if (!FileController.saveFile()) {
 						event.consume();
 					}
 				} else if (response == ButtonType.CANCEL) {
@@ -56,7 +56,6 @@ public class CloseController extends Controller {
 		}
 		if (!event.isConsumed()) {
 			ConfigController.store();
-			// TODO AutoSave.stop();
 		}
 	}
 

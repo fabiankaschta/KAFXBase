@@ -37,7 +37,11 @@ public class FileMenu extends Menu {
 			}
 
 			MenuItem menuItemChangePassword = new MenuItem(TranslationController.translate("menu_file_changePassword"));
-			menuItemChangePassword.setOnAction(_ -> EncryptionController.changePassword());
+			menuItemChangePassword.setOnAction(_ -> {
+				if (EncryptionController.setSecretKey()) {
+					FileController.saveFile();
+				}
+			});
 			this.getItems().add(menuItemChangePassword);
 		}
 	}

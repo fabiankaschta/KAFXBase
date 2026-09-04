@@ -1,7 +1,5 @@
 package org.openjfx.kafx.controller;
 
-import java.util.NoSuchElementException;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 
@@ -27,12 +25,20 @@ public abstract class EncryptionController extends Controller {
 
 	private SecretKey secretKey;
 
-	public static SecretKey requestSecretKey() {
+	public static boolean requestSecretKey() {
 		if (!isInitialized()) {
-			return null;
+			return true;
 		} else {
 			LogController.log(LogController.DEBUG, "requesting password");
-			return controller.secretKey = new DialogEnterPassword().showAndWait().orElseThrow();
+			SecretKey newKey = new DialogEnterPassword().showAndWait().orElse(null);
+			if (newKey == null) {
+				LogController.log(LogController.DEBUG, "requesting password - unsuccessful");
+				return false;
+			} else {
+				LogController.log(LogController.DEBUG, "requesting password - successful");
+				controller.secretKey = newKey;
+				return true;
+			}
 		}
 	}
 
@@ -40,13 +46,32 @@ public abstract class EncryptionController extends Controller {
 		if (!isInitialized()) {
 			return null;
 		} else {
-			if (controller.secretKey == null) {
-				LogController.log(LogController.DEBUG, "setting new password");
-				controller.secretKey = new DialogSetPassword().showAndWait().orElseThrow();
-			} else {
-				LogController.log(LogController.DEBUG, "using password");
-			}
+			LogController.log(LogController.DEBUG, "getting password");
 			return controller.secretKey;
+		}
+	}
+
+	public static boolean setSecretKey() {
+		if (!isInitialized()) {
+			return true;
+		} else {
+			LogController.log(LogController.DEBUG, "setting new password");
+			SecretKey newKey = new DialogSetPassword().showAndWait().orElse(null);
+			if (newKey == null) {
+				LogController.log(LogController.DEBUG, "setting new password - unsuccessful");
+				return false;
+			} else {
+				LogController.log(LogController.DEBUG, "setting new password - successful");
+				controller.secretKey = newKey;
+				return true;
+			}
+		}
+	}
+
+	public static void restoreSecretKey(SecretKey key) {
+		if (isInitialized()) {
+			LogController.log(LogController.DEBUG, "restoring password");
+			controller.secretKey = key;
 		}
 	}
 
@@ -89,23 +114,6 @@ public abstract class EncryptionController extends Controller {
 
 	protected void handleInvalidPassword() {
 		new AlertInvalidPassword().showAndWait();
-	}
-
-	public static void changePassword() {
-		if (!isInitialized()) {
-			return;
-		} else {
-			SecretKey oldKey = controller.secretKey; // save old password
-			controller.secretKey = null; // remove old password
-			try {
-				LogController.log(LogController.DEBUG, "changing password - successful");
-				getSecretKey(); // set new password
-			} catch (NoSuchElementException e) {
-				LogController.log(LogController.DEBUG, "changing password - unsuccessful");
-				controller.secretKey = oldKey;
-			}
-			FileController.saveFile(); // save file
-		}
 	}
 
 }
