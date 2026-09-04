@@ -2,6 +2,7 @@ package org.openjfx.kafx.controller;
 
 import java.util.function.Function;
 
+import javafx.beans.InvalidationListener;
 import javafx.print.PageLayout;
 import javafx.print.PageOrientation;
 import javafx.print.PageRange;
@@ -13,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.transform.Scale;
 
 public class PrintController extends Controller {
@@ -41,12 +43,20 @@ public class PrintController extends Controller {
 	}
 
 	public static void showPrintSinglePreview(Node printable) {
-		showPrintSinglePreview(printable, null);
+		showPrintSinglePreview(printable, null, null);
+	}
+
+	public static void showPrintSinglePreview(Node printable, Node options) {
+		showPrintSinglePreview(printable, options, null);
 	}
 
 	public static void showPrintSinglePreview(Node printable, Function<Printer, PageLayout> pageLayout) {
+		showPrintSinglePreview(printable, null, pageLayout);
+	}
+
+	public static void showPrintSinglePreview(Node printable, Node options, Function<Printer, PageLayout> pageLayout) {
 		if (isInitialized()) {
-			controller.createPrintPreviewDialog(printable).showAndWait().ifPresent(print -> {
+			controller.createPrintPreviewDialog(printable, options).showAndWait().ifPresent(print -> {
 				if (print) {
 					printSinglePage(printable, pageLayout);
 				}
@@ -55,12 +65,20 @@ public class PrintController extends Controller {
 	}
 
 	public static void showPrintPreview(Node printable) {
-		showPrintPreview(printable, null);
+		showPrintPreview(printable, null, null);
+	}
+
+	public static void showPrintPreview(Node printable, Node options) {
+		showPrintPreview(printable, options, null);
 	}
 
 	public static void showPrintPreview(Node printable, Function<Printer, PageLayout> pageLayout) {
+		showPrintPreview(printable, null, pageLayout);
+	}
+
+	public static void showPrintPreview(Node printable, Node options, Function<Printer, PageLayout> pageLayout) {
 		if (isInitialized()) {
-			controller.createPrintPreviewDialog(printable).showAndWait().ifPresent(print -> {
+			controller.createPrintPreviewDialog(printable, options).showAndWait().ifPresent(print -> {
 				if (print) {
 					print(printable, pageLayout);
 				}
@@ -68,8 +86,29 @@ public class PrintController extends Controller {
 		}
 	}
 
-	protected Dialog<Boolean> createPrintPreviewDialog(Node printable) {
-		DialogPane root = new DialogPane();
+	protected Dialog<Boolean> createPrintPreviewDialog(Node printable, Node options) {
+		DialogPane root = new DialogPane() {
+			// copy from DialogPane, only Strings changed
+			@Override
+			protected Node createDetailsButton() {
+				final Hyperlink detailsButton = new Hyperlink();
+				final String moreText = TranslationController.translate("dialog_printPreview_options_show");
+				final String lessText = TranslationController.translate("dialog_printPreview_options_hide");
+
+				InvalidationListener expandedListener = _ -> {
+					final boolean isExpanded = isExpanded();
+					detailsButton.setText(isExpanded ? lessText : moreText);
+					detailsButton.getStyleClass().setAll("details-button", (isExpanded ? "less" : "more"));
+				};
+
+				// we call the listener immediately to ensure the state is correct at start up
+				expandedListener.invalidated(null);
+				expandedProperty().addListener(expandedListener);
+
+				detailsButton.setOnAction(_ -> setExpanded(!isExpanded()));
+				return detailsButton;
+			}
+		};
 		root.setContent(printable);
 		root.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		root.getStylesheets().add(Controller.getStylesheetURL().toExternalForm());
@@ -77,6 +116,9 @@ public class PrintController extends Controller {
 		Dialog<Boolean> dialog = new Dialog<>();
 		dialog.setTitle(TranslationController.translate("dialog_printPreview_title"));
 		dialog.setDialogPane(root);
+		if (options != null) {
+			root.setExpandableContent(options);
+		}
 		dialog.setResultConverter(type -> type == ButtonType.OK);
 		return dialog;
 	}
