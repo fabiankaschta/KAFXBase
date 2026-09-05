@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import org.openjfx.kafx.view.dialog.DialogPaneCustom;
 
+import javafx.geometry.Insets;
 import javafx.print.PageLayout;
 import javafx.print.PageOrientation;
 import javafx.print.PageRange;
@@ -15,7 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 
 public class PrintController extends Controller {
@@ -91,20 +92,28 @@ public class PrintController extends Controller {
 		Dialog<Boolean> dialog = new Dialog<>();
 		dialog.setTitle(TranslationController.translate("dialog_printPreview_title"));
 		dialog.setResizable(true);
+		double defaultWidth = Math.min(printable.prefWidth(-1), Controller.getPrimaryStage().getWidth());
+		double defaultHeigth = Math.min(printable.prefHeight(-1), Controller.getPrimaryStage().getHeight());
+		dialog.setWidth(defaultWidth);
+		dialog.setHeight(defaultHeigth);
+		
 		DialogPaneCustom root = new DialogPaneCustom();
 		root.setDetailsButtonMoreText(TranslationController.translate("dialog_printPreview_options_show"));
 		root.setDetailsButtonLessText(TranslationController.translate("dialog_printPreview_options_hide"));
 		dialog.setDialogPane(root);
-		ScrollPane scrollPane = new ScrollPane(printable);
-		double defaultWidth = 500;
-		double defaultHeigth = 500;
-		dialog.setWidth(defaultWidth);
-		dialog.setHeight(defaultHeigth);
-		scrollPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+		
+		VBox content = new VBox(printable);
+		content.setPadding(new Insets(10));
+		ScrollPane scrollPane = new ScrollPane(content);
+		scrollPane.getStyleClass().add("scroll-pane-no-focus");
+		scrollPane.setPadding(new Insets(0));
 		root.setContent(scrollPane);
+		
 		root.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		root.getStylesheets().add(Controller.getStylesheetURL().toExternalForm());
+		
 		FontSizeController.fontSizeProperty().subscribe(fontSize -> root.setStyle("-fx-font-size: " + fontSize + ";"));
+		
 		if (options != null) {
 			root.setExpandableContent(options);
 			// flipping this switches resizable on/off
@@ -112,7 +121,9 @@ public class PrintController extends Controller {
 				dialog.setResizable(true);
 			});
 		}
+		
 		dialog.setResultConverter(type -> type == ButtonType.OK);
+		
 		return dialog;
 	}
 

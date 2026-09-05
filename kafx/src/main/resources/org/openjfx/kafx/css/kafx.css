@@ -225,3 +225,10 @@
     -fx-background-insets: 0.0, 0.0, 0.0;
     -fx-background-radius: 0.0, 0.0, 0.0;
 }
+.scroll-pane-no-focus .scroll-bar {
+	-fx-background-insets: 0, 0;
+	-fx-padding: 0;
+}
+.scroll-pane-no-focus .corner {
+    -fx-background-insets: 0;
+}
