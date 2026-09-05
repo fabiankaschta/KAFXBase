@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 
 public abstract class DialogUserInput<T> extends Dialog<T> {
@@ -18,7 +19,12 @@ public abstract class DialogUserInput<T> extends Dialog<T> {
 	private final LabeledUserInputTableView grid = new LabeledUserInputTableView();
 
 	protected DialogUserInput(String title) {
+		this(title, new DialogPane());
+	}
+
+	protected DialogUserInput(String title, DialogPane dialogPane) {
 		this.setTitle(title);
+		this.setDialogPane(dialogPane);
 		this.grid.widthProperty().addListener((_, _, _) -> this.getDialogPane().getScene().getWindow().sizeToScene());
 		this.grid.heightProperty().addListener((_, _, _) -> this.getDialogPane().getScene().getWindow().sizeToScene());
 		this.getDialogPane().setContent(grid);

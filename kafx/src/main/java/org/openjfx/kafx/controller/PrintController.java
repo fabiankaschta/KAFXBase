@@ -2,19 +2,20 @@ package org.openjfx.kafx.controller;
 
 import java.util.function.Function;
 
-import javafx.beans.InvalidationListener;
+import org.openjfx.kafx.view.dialog.DialogPaneCustom;
+
 import javafx.print.PageLayout;
 import javafx.print.PageOrientation;
 import javafx.print.PageRange;
 import javafx.print.Paper;
-import javafx.print.Printer;
 import javafx.print.PrintResolution;
+import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Region;
 import javafx.scene.transform.Scale;
 
 public class PrintController extends Controller {
@@ -87,37 +88,29 @@ public class PrintController extends Controller {
 	}
 
 	protected Dialog<Boolean> createPrintPreviewDialog(Node printable, Node options) {
-		DialogPane root = new DialogPane() {
-			// copy from DialogPane, only Strings changed
-			@Override
-			protected Node createDetailsButton() {
-				final Hyperlink detailsButton = new Hyperlink();
-				final String moreText = TranslationController.translate("dialog_printPreview_options_show");
-				final String lessText = TranslationController.translate("dialog_printPreview_options_hide");
-
-				InvalidationListener expandedListener = _ -> {
-					final boolean isExpanded = isExpanded();
-					detailsButton.setText(isExpanded ? lessText : moreText);
-					detailsButton.getStyleClass().setAll("details-button", (isExpanded ? "less" : "more"));
-				};
-
-				// we call the listener immediately to ensure the state is correct at start up
-				expandedListener.invalidated(null);
-				expandedProperty().addListener(expandedListener);
-
-				detailsButton.setOnAction(_ -> setExpanded(!isExpanded()));
-				return detailsButton;
-			}
-		};
-		root.setContent(printable);
+		Dialog<Boolean> dialog = new Dialog<>();
+		dialog.setTitle(TranslationController.translate("dialog_printPreview_title"));
+		dialog.setResizable(true);
+		DialogPaneCustom root = new DialogPaneCustom();
+		root.setDetailsButtonMoreText(TranslationController.translate("dialog_printPreview_options_show"));
+		root.setDetailsButtonLessText(TranslationController.translate("dialog_printPreview_options_hide"));
+		dialog.setDialogPane(root);
+		ScrollPane scrollPane = new ScrollPane(printable);
+		double defaultWidth = 500;
+		double defaultHeigth = 500;
+		dialog.setWidth(defaultWidth);
+		dialog.setHeight(defaultHeigth);
+		scrollPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+		root.setContent(scrollPane);
 		root.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		root.getStylesheets().add(Controller.getStylesheetURL().toExternalForm());
 		FontSizeController.fontSizeProperty().subscribe(fontSize -> root.setStyle("-fx-font-size: " + fontSize + ";"));
-		Dialog<Boolean> dialog = new Dialog<>();
-		dialog.setTitle(TranslationController.translate("dialog_printPreview_title"));
-		dialog.setDialogPane(root);
 		if (options != null) {
 			root.setExpandableContent(options);
+			// flipping this switches resizable on/off
+			root.expandedProperty().addListener(_ -> {
+				dialog.setResizable(true);
+			});
 		}
 		dialog.setResultConverter(type -> type == ButtonType.OK);
 		return dialog;
