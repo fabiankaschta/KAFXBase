@@ -9,7 +9,6 @@ import javafx.print.PageLayout;
 import javafx.print.PageOrientation;
 import javafx.print.PageRange;
 import javafx.print.Paper;
-import javafx.print.PrintResolution;
 import javafx.print.Printer;
 import javafx.print.PrinterJob;
 import javafx.scene.Node;
@@ -96,24 +95,25 @@ public class PrintController extends Controller {
 		double defaultHeigth = Math.min(printable.prefHeight(-1), Controller.getPrimaryStage().getHeight());
 		dialog.setWidth(defaultWidth);
 		dialog.setHeight(defaultHeigth);
-		
+
 		DialogPaneCustom root = new DialogPaneCustom();
 		root.setDetailsButtonMoreText(TranslationController.translate("dialog_printPreview_options_show"));
 		root.setDetailsButtonLessText(TranslationController.translate("dialog_printPreview_options_hide"));
 		dialog.setDialogPane(root);
-		
+
 		VBox content = new VBox(printable);
 		content.setPadding(new Insets(10));
 		ScrollPane scrollPane = new ScrollPane(content);
 		scrollPane.getStyleClass().add("scroll-pane-no-focus");
 		scrollPane.setPadding(new Insets(0));
+		scrollPane.prefWidthProperty().bind(content.prefWidthProperty());
 		root.setContent(scrollPane);
-		
+
 		root.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 		root.getStylesheets().add(Controller.getStylesheetURL().toExternalForm());
-		
+
 		FontSizeController.fontSizeProperty().subscribe(fontSize -> root.setStyle("-fx-font-size: " + fontSize + ";"));
-		
+
 		if (options != null) {
 			root.setExpandableContent(options);
 			// flipping this switches resizable on/off
@@ -121,9 +121,9 @@ public class PrintController extends Controller {
 				dialog.setResizable(true);
 			});
 		}
-		
+
 		dialog.setResultConverter(type -> type == ButtonType.OK);
-		
+
 		return dialog;
 	}
 
@@ -148,7 +148,6 @@ public class PrintController extends Controller {
 				} else {
 					LogController.log(LogController.DEBUG, "print aborted - cancelled");
 				}
-				printableNode.setManaged(true);
 			} else {
 				LogController.log(LogController.DEBUG, "print aborted - nothing to print");
 			}
@@ -170,36 +169,38 @@ public class PrintController extends Controller {
 						job.getJobSettings().setPageLayout(pageLayout.apply(job.getPrinter()));
 					}
 					if (job.showPageSetupDialog(Controller.getPrimaryStage().getOwner())) {
-						Scale scale = scaleToPage(printableNode, job);
+						Scale scale = scaleToPage(printableNode, job.getJobSettings().getPageLayout());
+						boolean wasManaged = printableNode.isManaged();
+						if (wasManaged) {
+							printableNode.setManaged(false);
+						}
+						printableNode.getTransforms().add(scale);
 						printJob(printableNode, job);
 						printableNode.getTransforms().remove(scale);
+						if (wasManaged) {
+							printableNode.setManaged(true);
+						}
 					} else {
 						LogController.log(LogController.DEBUG, "print aborted - cancelled");
 					}
 				} else {
 					LogController.log(LogController.DEBUG, "print aborted - cancelled");
 				}
-				printableNode.setManaged(true);
 			} else {
 				LogController.log(LogController.DEBUG, "print aborted - nothing to print");
 			}
 		}
 	}
 
-	private static Scale scaleToPage(Node node, PrinterJob job) {
-		node.setManaged(false);
-		PageLayout pageLayout = job.getJobSettings().getPageLayout();
-		double width = node.prefWidth(-1);
-		double height = node.prefHeight(-1);
-		PrintResolution resolution = job.getJobSettings().getPrintResolution();
-		width /= resolution.getFeedResolution();
-		height /= resolution.getCrossFeedResolution();
-		double scaleX = pageLayout.getPrintableWidth() / width / 600;
-		double scaleY = pageLayout.getPrintableHeight() / height / 600;
-		Scale scale = new Scale(Math.min(scaleX, scaleY), Math.min(scaleX, scaleY));
-		node.getTransforms().add(scale);
-		node.autosize();
-		return scale;
+	private static Scale scaleToPage(Node node, PageLayout pageLayout) {
+		// FIXME printing scale is a little bit off
+		double width = node.prefWidth(-1) + 20;
+		double height = node.prefHeight(-1) + 20;
+
+		double scaleX = pageLayout.getPrintableWidth() / width;
+		double scaleY = pageLayout.getPrintableHeight() / height;
+
+		return new Scale(Math.min(scaleX, scaleY), Math.min(scaleX, scaleY));
 	}
 
 	private static void printJob(Node node, PrinterJob job) {
