@@ -13,8 +13,9 @@ public class LogController extends Controller {
 
 	private static LogController controller;
 
-	protected LogController() {
+	protected LogController(Level level) {
 		logger.setUseParentHandlers(false);
+		logger.setLevel(level);
 		Formatter logFormatter = new Formatter() {
 
 			@Override
@@ -36,7 +37,7 @@ public class LogController extends Controller {
 		});
 		try {
 			FileHandler fileHandler = new FileHandler("%h/.gradefx.log") {
-				
+
 				@Override
 				public synchronized void publish(LogRecord record) {
 					super.publish(record);
@@ -48,10 +49,13 @@ public class LogController extends Controller {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 		}
+		for (Handler h : logger.getHandlers()) {
+			h.setLevel(level);
+		}
 	}
 
-	public static void init() {
-		init(new LogController());
+	public static void init(Level level) {
+		init(new LogController(level));
 	}
 
 	public static boolean isInitialized() {
@@ -71,20 +75,6 @@ public class LogController extends Controller {
 
 	public static void log(Level level, String message) {
 		logger.log(level, message);
-	}
-
-	public static void setDebugMode(boolean enabled) {
-		if (enabled) {
-			logger.setLevel(Level.ALL);
-			for (Handler h : logger.getHandlers()) {
-				h.setLevel(Level.ALL);
-			}
-		} else {
-			logger.setLevel(Level.OFF);
-			for (Handler h : logger.getHandlers()) {
-				h.setLevel(Level.OFF);
-			}
-		}
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.openjfx.kafx.controller;
 
 import java.net.URL;
+import java.util.logging.Level;
 
 import javafx.stage.Stage;
 
@@ -10,7 +11,11 @@ public class Controller {
 	}
 
 	public static void init(String configFileName) {
-		LogController.init();
+		init(configFileName, Level.WARNING);
+	}
+
+	public static void init(String configFileName, Level logLevel) {
+		LogController.init(logLevel);
 		ExceptionController.init();
 		PropertiesController.init();
 		ConfigController.init(configFileName);
@@ -20,7 +25,11 @@ public class Controller {
 	}
 
 	public static void init(String configFilePath, String configFileName) {
-		LogController.init();
+		init(configFilePath, configFileName, Level.WARNING);
+	}
+
+	public static void init(String configFilePath, String configFileName, Level logLevel) {
+		LogController.init(logLevel);
 		ExceptionController.init();
 		PropertiesController.init();
 		ConfigController.init(configFilePath, configFileName);

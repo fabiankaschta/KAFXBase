@@ -11,6 +11,7 @@ public class PluginController extends Controller {
 	private final JarPluginManager pluginMananger;
 
 	protected PluginController(JarPluginManager pluginMananger) {
+		LogController.log(LogController.DEBUG, "init plugin controller");
 		this.pluginMananger = pluginMananger;
 		this.pluginMananger.loadPlugins();
 		this.pluginMananger.startPlugins();
@@ -21,7 +22,6 @@ public class PluginController extends Controller {
 	}
 
 	public static void init(PluginController controller) {
-		LogController.log(LogController.DEBUG, "init plugin controller");
 		PluginController.controller = controller;
 	}
 
