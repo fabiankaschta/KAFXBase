@@ -10,13 +10,10 @@ public class PropertiesController extends Controller {
 	private final Properties properties;
 
 	protected PropertiesController() {
-		this(PropertiesController.class.getResourceAsStream("/org/openjfx/kafx/kafx.properties"));
-	}
-
-	protected PropertiesController(InputStream inputStream) {
 		this.properties = new Properties();
 		try {
-			this.properties.load(inputStream);
+			controller.properties
+					.load(PropertiesController.class.getResourceAsStream("/org/openjfx/kafx/kafx.properties"));
 		} catch (Exception e) {
 			ExceptionController.exception(e);
 		}
@@ -26,10 +23,6 @@ public class PropertiesController extends Controller {
 		init(new PropertiesController());
 	}
 
-	public static void init(InputStream inputStream) {
-		init(new PropertiesController(inputStream));
-	}
-
 	public static void init(PropertiesController controller) {
 		LogController.log(LogController.DEBUG, "init properties controller");
 		PropertiesController.controller = controller;
@@ -37,6 +30,16 @@ public class PropertiesController extends Controller {
 
 	public static boolean isInitialized() {
 		return controller != null;
+	}
+
+	public static void addProperties(InputStream inputStream) {
+		if (isInitialized()) {
+			try {
+				controller.properties.load(inputStream);
+			} catch (Exception e) {
+				ExceptionController.exception(e);
+			}
+		}
 	}
 
 	public static String getProperty(String key) {

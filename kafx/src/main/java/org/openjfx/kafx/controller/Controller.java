@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.logging.Level;
 
 import javafx.stage.Stage;
+import javafx.application.Application;
 
 public class Controller {
 
@@ -42,11 +43,21 @@ public class Controller {
 		return Controller.class.getResource("/org/openjfx/kafx/css/kafx.css");
 	}
 
+	private static Application application;
 	private static Stage primaryStage;
+
+	public static void setApplication(Application app) {
+		LogController.log(LogController.DEBUG, "setting application");
+		application = app;
+	}
 
 	public static void setPrimaryStage(Stage stage) {
 		LogController.log(LogController.DEBUG, "setting primary stage");
 		primaryStage = stage;
+	}
+
+	public static Application getApplication() {
+		return application;
 	}
 
 	public static Stage getPrimaryStage() {
