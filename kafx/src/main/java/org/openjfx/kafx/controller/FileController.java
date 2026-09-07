@@ -136,6 +136,7 @@ public abstract class FileController extends Controller {
 					if (result) {
 						LogController.log(LogController.DEBUG, "new file - successful");
 					} else {
+						EncryptionController.restoreSecretKey(oldKey);
 						LogController.log(LogController.DEBUG, "new file - unsuccessful");
 					}
 					AutoSaveController.start();
@@ -169,6 +170,7 @@ public abstract class FileController extends Controller {
 				if (result) {
 					LogController.log(LogController.DEBUG, "open file - successful");
 				} else {
+					EncryptionController.restoreSecretKey(oldKey);
 					LogController.log(LogController.DEBUG, "open file - unsuccessful");
 				}
 				AutoSaveController.start();
@@ -230,6 +232,7 @@ public abstract class FileController extends Controller {
 					if (result) {
 						LogController.log(LogController.DEBUG, "open file - successful");
 					} else {
+						EncryptionController.restoreSecretKey(oldKey);
 						LogController.log(LogController.DEBUG, "open file - unsuccessful");
 					}
 					AutoSaveController.start();

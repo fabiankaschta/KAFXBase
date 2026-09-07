@@ -32,7 +32,11 @@ public abstract class EncryptedFileIO extends FileIO {
 				return read(new CipherInputStream(fileInputStream, cipher));
 			} catch (StreamCorruptedException e) {
 				EncryptionController.invalidPassword();
-				return false;
+				if (EncryptionController.requestSecretKey()) {
+					return readFromFile(file);
+				} else {
+					return false;
+				}
 			}
 		} catch (NoSuchElementException e) {
 			return false;
