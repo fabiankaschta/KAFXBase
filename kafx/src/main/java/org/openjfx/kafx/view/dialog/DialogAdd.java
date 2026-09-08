@@ -46,8 +46,8 @@ public abstract class DialogAdd<T> extends DialogUserInputButtonBinding<T> {
 	}
 
 	public void setDefaultButtonAdd() {
-		this.addButton.setDefaultButton(false);
-		this.addMoreButton.setDefaultButton(true);
+		this.addMoreButton.setDefaultButton(false);
+		this.addButton.setDefaultButton(true);
 	}
 
 	public void setDefaultButtonAddMore() {
