@@ -6,11 +6,13 @@ module org.openjfx.kafx {
     requires transitive org.controlsfx.controls;
 	requires com.github.zafarkhaja.semver;
 	exports org.openjfx.kafx.controller;
+	exports org.openjfx.kafx.converter;
 	exports org.openjfx.kafx.io;
 	exports org.openjfx.kafx.lang;
+	exports org.openjfx.kafx.model;
+	exports org.openjfx.kafx.pattern;
 	exports org.openjfx.kafx.view.alert;
 	exports org.openjfx.kafx.view.control;
-	exports org.openjfx.kafx.view.converter;
 	exports org.openjfx.kafx.view.dialog;
 	exports org.openjfx.kafx.view.dialog.userinput;
 	exports org.openjfx.kafx.view.imageview;

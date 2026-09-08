@@ -1,4 +1,4 @@
-package org.openjfx.kafx.view.converter;
+package org.openjfx.kafx.converter;
 
 import javafx.util.StringConverter;
 

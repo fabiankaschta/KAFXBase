@@ -2,7 +2,7 @@ package org.openjfx.kafx.view.control;
 
 import java.util.List;
 
-import org.openjfx.kafx.view.converter.DefaultForwardConverter;
+import org.openjfx.kafx.converter.DefaultForwardConverter;
 
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TreeItem;

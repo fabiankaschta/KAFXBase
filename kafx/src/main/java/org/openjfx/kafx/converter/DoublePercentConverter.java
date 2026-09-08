@@ -1,4 +1,4 @@
-package org.openjfx.kafx.view.converter;
+package org.openjfx.kafx.converter;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;

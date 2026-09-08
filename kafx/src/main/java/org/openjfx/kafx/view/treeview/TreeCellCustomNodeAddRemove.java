@@ -6,35 +6,31 @@ import java.util.function.Function;
 
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.util.StringConverter;
 
-public class TreeCellCustomAddRemove<T> extends TreeCell<T> {
+public class TreeCellCustomNodeAddRemove<T> extends TreeCell<T> {
 
 	private String addSymbol = "+";
 	private String removeSymbol = "-";
-	private final StringConverter<T> converter;
+	private final Function<T, Node> converter;
 	private final Consumer<TreeItem<T>> addHandler;
 	private final Function<TreeItem<T>, Optional<Boolean>> editHandler;
 	private final Consumer<TreeItem<T>> removeHandler;
 
-	public TreeCellCustomAddRemove(Consumer<TreeItem<T>> addHandler,
-			Function<TreeItem<T>, Optional<Boolean>> editHandler, Consumer<TreeItem<T>> removeHandler) {
-		this(null, addHandler, editHandler, removeHandler);
-	}
-
-	public TreeCellCustomAddRemove(StringConverter<T> converter, Consumer<TreeItem<T>> addHandler,
+	public TreeCellCustomNodeAddRemove(Function<T, Node> converter, Consumer<TreeItem<T>> addHandler,
 			Function<TreeItem<T>, Optional<Boolean>> editHandler, Consumer<TreeItem<T>> removeHandler) {
 		this.addHandler = addHandler;
 		this.editHandler = editHandler;
 		if (this.editHandler != null) {
 			setEditable(true);
+		} else {
+			setEditable(false);
 		}
 		this.removeHandler = removeHandler;
 		this.converter = converter;
@@ -57,12 +53,7 @@ public class TreeCellCustomAddRemove<T> extends TreeCell<T> {
 				setGraphic(null);
 			} else {
 				BorderPane graphic = new BorderPane();
-				Label label = new Label();
-				if (converter == null) {
-					label.setText(item.toString());
-				} else {
-					label.setText(this.converter.toString(item));
-				}
+				Node node = this.converter.apply(item);
 				ButtonBar buttons = new ButtonBar();
 				Button addButton = new Button(addSymbol);
 				addButton.setPrefWidth(30);
@@ -75,8 +66,8 @@ public class TreeCellCustomAddRemove<T> extends TreeCell<T> {
 					return getTreeView().getRoot() == this.getTreeItem();
 				}, getTreeView().rootProperty()));
 				buttons.setButtonMinWidth(USE_COMPUTED_SIZE);
-				graphic.setCenter(label);
-				BorderPane.setAlignment(label, Pos.CENTER_LEFT);
+				graphic.setCenter(node);
+				BorderPane.setAlignment(node, Pos.CENTER_LEFT);
 				graphic.setRight(buttons);
 
 				addButton.setOnAction(_ -> this.addHandler.accept(getTreeItem()));
@@ -92,18 +83,6 @@ public class TreeCellCustomAddRemove<T> extends TreeCell<T> {
 
 	public void setRemoveText(String removeSymbol) {
 		this.removeSymbol = removeSymbol;
-	}
-
-	@Override
-	public void startEdit() {
-		super.startEdit();
-		if (this.editHandler != null) {
-			this.editHandler.apply(getTreeItem()).ifPresent(r -> {
-				if (r) {
-					commitEdit(getItem());
-				}
-			});
-		}
 	}
 
 }

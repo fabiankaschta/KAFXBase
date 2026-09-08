@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.openjfx.kafx.model.RomanNumber;
+
 public abstract class FileIO {
 
 	public boolean readFromFile(File file) throws Exception {
@@ -32,7 +34,7 @@ public abstract class FileIO {
 	}
 
 	public List<Class<?>> getPermittedSerializableClasses() {
-		return new ArrayList<>(Arrays.asList(new Class<?>[] { Data.class }));
+		return new ArrayList<>(Arrays.asList(new Class<?>[] { Data.class, RomanNumber.class }));
 	}
 
 	public List<Class<?>> getPermittedDataObjectClasses() {
