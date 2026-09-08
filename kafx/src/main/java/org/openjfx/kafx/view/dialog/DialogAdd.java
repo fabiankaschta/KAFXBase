@@ -2,14 +2,11 @@ package org.openjfx.kafx.view.dialog;
 
 import java.util.List;
 
-import org.openjfx.kafx.controller.TranslationController;
 import org.openjfx.kafx.view.dialog.userinput.UserInput;
 
 import javafx.beans.binding.BooleanExpression;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 
 public abstract class DialogAdd<T> extends DialogUserInputButtonBinding<T> {
 
@@ -23,14 +20,11 @@ public abstract class DialogAdd<T> extends DialogUserInputButtonBinding<T> {
 	public DialogAdd(String title, boolean addMoreButton) {
 		super(title);
 
-		ButtonType cancelButtonType = ButtonType.CANCEL;
-		ButtonType addButtonType = new ButtonType(TranslationController.translate("dialog_add_button_add"), ButtonData.OK_DONE);
-		ButtonType addMoreButtonType = ButtonType.NEXT;
-		this.getDialogPane().getButtonTypes().addAll(addMoreButtonType, addButtonType, cancelButtonType);
+		this.getDialogPane().getButtonTypes().addAll(ADD_MORE, ADD, CANCEL);
 
-		this.addButton = (Button) this.getDialogPane().lookupButton(addButtonType);
+		this.addButton = (Button) this.getDialogPane().lookupButton(ADD);
 
-		this.addMoreButton = (Button) this.getDialogPane().lookupButton(addMoreButtonType);
+		this.addMoreButton = (Button) this.getDialogPane().lookupButton(ADD_MORE);
 		this.addMoreButton.addEventFilter(ActionEvent.ACTION, e -> {
 			create();
 			userInputsUnmodifiable().get(0).requestFocus();
@@ -43,12 +37,22 @@ public abstract class DialogAdd<T> extends DialogUserInputButtonBinding<T> {
 		this.bindButtonDisable(this.addMoreButton);
 
 		this.setResultConverter(dialogButton -> {
-			if (dialogButton == addButtonType) {
+			if (dialogButton == ADD) {
 				return create();
 			} else {
 				return null;
 			}
 		});
+	}
+
+	public void setDefaultButtonAdd() {
+		this.addButton.setDefaultButton(false);
+		this.addMoreButton.setDefaultButton(true);
+	}
+
+	public void setDefaultButtonAddMore() {
+		this.addButton.setDefaultButton(false);
+		this.addMoreButton.setDefaultButton(true);
 	}
 
 	public void showAddMoreButton(boolean show) {
