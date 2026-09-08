@@ -12,8 +12,7 @@ public class PropertiesController extends Controller {
 	protected PropertiesController() {
 		this.properties = new Properties();
 		try {
-			controller.properties
-					.load(PropertiesController.class.getResourceAsStream("/org/openjfx/kafx/kafx.properties"));
+			properties.load(PropertiesController.class.getResourceAsStream("/org/openjfx/kafx/kafx.properties"));
 		} catch (Exception e) {
 			ExceptionController.exception(e);
 		}
