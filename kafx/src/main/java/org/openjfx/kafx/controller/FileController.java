@@ -10,15 +10,22 @@ import org.openjfx.kafx.view.alert.AlertSaveChanges;
 import javafx.event.Event;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public abstract class FileController extends Controller {
 
 	private static FileController controller;
 
 	private final FileIO fileIO;
+	private final ExtensionFilter extensionFilter;
 
 	protected FileController(FileIO fileIO) {
+		this(fileIO, null);
+	}
+
+	protected FileController(FileIO fileIO, ExtensionFilter extensionFilter) {
 		this.fileIO = fileIO;
+		this.extensionFilter = extensionFilter;
 	}
 
 	public static void init(FileController controller) {
@@ -128,7 +135,10 @@ public abstract class FileController extends Controller {
 			} else {
 				fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 			}
-			File file = fileChooser.showSaveDialog(null);
+			if (controller.extensionFilter != null) {
+				fileChooser.getExtensionFilters().add(controller.extensionFilter);
+			}
+			File file = fileChooser.showSaveDialog(Controller.getPrimaryStage());
 			if (file != null) {
 				SecretKey oldKey = EncryptionController.getSecretKey();
 				if (EncryptionController.setSecretKey()) {
@@ -224,7 +234,10 @@ public abstract class FileController extends Controller {
 			} else {
 				fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 			}
-			File file = fileChooser.showOpenDialog(null);
+			if (controller.extensionFilter != null) {
+				fileChooser.getExtensionFilters().add(controller.extensionFilter);
+			}
+			File file = fileChooser.showOpenDialog(Controller.getPrimaryStage());
 			if (file != null) {
 				SecretKey oldKey = EncryptionController.getSecretKey();
 				if (EncryptionController.requestSecretKey()) {
@@ -280,7 +293,10 @@ public abstract class FileController extends Controller {
 			} else {
 				fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 			}
-			File file = fileChooser.showSaveDialog(null);
+			if (controller.extensionFilter != null) {
+				fileChooser.getExtensionFilters().add(controller.extensionFilter);
+			}
+			File file = fileChooser.showSaveDialog(Controller.getPrimaryStage());
 			if (file != null) {
 				boolean result = controller.handleSaveFile(file);
 				AutoSaveController.start();
