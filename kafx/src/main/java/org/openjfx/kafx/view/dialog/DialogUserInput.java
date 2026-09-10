@@ -1,7 +1,5 @@
 package org.openjfx.kafx.view.dialog;
 
-import org.openjfx.kafx.controller.Controller;
-import org.openjfx.kafx.controller.FontSizeController;
 import org.openjfx.kafx.controller.TranslationController;
 import org.openjfx.kafx.view.dialog.userinput.UserInput;
 import org.openjfx.kafx.view.tableview.LabeledUserInputTableView;
@@ -11,18 +9,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ButtonBar.ButtonData;
 
-public abstract class DialogUserInput<T> extends Dialog<T> {
+public abstract class DialogUserInput<T> extends DialogCustom<T> {
 
 	public final static ButtonType CANCEL = ButtonType.CANCEL;
-	public final static ButtonType ADD = new ButtonType(
-			TranslationController.translate("dialog_add_button_add"), ButtonData.OK_DONE);
+	public final static ButtonType ADD = new ButtonType(TranslationController.translate("dialog_add_button_add"),
+			ButtonData.OK_DONE);
 	public final static ButtonType ADD_MORE = ButtonType.NEXT;
-	public final static ButtonType EDIT = new ButtonType(TranslationController.translate("dialog_edit_button_edit"), ButtonData.OK_DONE);
+	public final static ButtonType EDIT = new ButtonType(TranslationController.translate("dialog_edit_button_edit"),
+			ButtonData.OK_DONE);
 
 	private final ObservableList<UserInput<?>> userInputs = FXCollections.observableArrayList();
 	private final LabeledUserInputTableView grid = new LabeledUserInputTableView();
@@ -37,9 +35,6 @@ public abstract class DialogUserInput<T> extends Dialog<T> {
 		this.grid.widthProperty().addListener((_, _, _) -> this.getDialogPane().getScene().getWindow().sizeToScene());
 		this.grid.heightProperty().addListener((_, _, _) -> this.getDialogPane().getScene().getWindow().sizeToScene());
 		this.getDialogPane().setContent(grid);
-		FontSizeController.fontSizeProperty()
-				.subscribe(fontSize -> this.getDialogPane().setStyle("-fx-font-size: " + fontSize));
-		this.initOwner(Controller.getPrimaryStage());
 	}
 
 	protected ObservableList<UserInput<?>> userInputsUnmodifiable() {

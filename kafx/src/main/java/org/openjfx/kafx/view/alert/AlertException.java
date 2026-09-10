@@ -3,13 +3,11 @@ package org.openjfx.kafx.view.alert;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.openjfx.kafx.controller.FontSizeController;
 import org.openjfx.kafx.controller.TranslationController;
 
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 
-public class AlertException extends Alert {
+public class AlertException extends AlertCustom {
 
 	public AlertException(Throwable t) {
 		super(AlertType.ERROR);
@@ -24,8 +22,6 @@ public class AlertException extends Alert {
 		area.setEditable(false);
 		this.getDialogPane().setExpandableContent(area);
 		this.setResizable(true);
-		FontSizeController.fontSizeProperty()
-				.subscribe(fontSize -> this.getDialogPane().setStyle("-fx-font-size: " + fontSize));
 	}
 
 }

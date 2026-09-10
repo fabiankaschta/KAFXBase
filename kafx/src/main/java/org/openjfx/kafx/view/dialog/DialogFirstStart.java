@@ -4,16 +4,14 @@ import org.openjfx.kafx.controller.AutoSaveController;
 import org.openjfx.kafx.controller.CloseController;
 import org.openjfx.kafx.controller.Controller;
 import org.openjfx.kafx.controller.FileController;
-import org.openjfx.kafx.controller.FontSizeController;
 import org.openjfx.kafx.controller.TranslationController;
 
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
 
-public class DialogFirstStart extends Dialog<Boolean> {
+public class DialogFirstStart extends DialogCustom<Boolean> {
 
 	public final static ButtonType NEW_FILE = new ButtonType(
 			TranslationController.translate("dialog_firstStart_newFile"), ButtonData.OTHER);
@@ -33,9 +31,6 @@ public class DialogFirstStart extends Dialog<Boolean> {
 
 	public DialogFirstStart(String title, String message) {
 		this.setTitle(title);
-		FontSizeController.fontSizeProperty()
-				.subscribe(fontSize -> this.getDialogPane().setStyle("-fx-font-size: " + fontSize));
-		this.initOwner(Controller.getPrimaryStage());
 		Label startMessage = new Label(message);
 		startMessage.setWrapText(true);
 		startMessage.setTextAlignment(TextAlignment.CENTER);

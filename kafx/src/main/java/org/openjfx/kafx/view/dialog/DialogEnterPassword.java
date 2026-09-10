@@ -19,14 +19,12 @@ public class DialogEnterPassword extends DialogUserInput<SecretKey> {
 		this.password = new UserInputTextInput(new PasswordField());
 		super.addInput(this.password, TranslationController.translate("dialog_enterPassword_password"));
 
-		ButtonType cancelButtonType = ButtonType.CANCEL;
-		ButtonType okButtonType = ButtonType.OK;
-		this.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-		this.getDialogPane().lookupButton(okButtonType).disableProperty()
+		this.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+		this.getDialogPane().lookupButton(ButtonType.OK).disableProperty()
 				.bind(this.password.isSelectedExpression().not());
 
 		this.setResultConverter(dialogButton -> {
-			if (dialogButton == okButtonType) {
+			if (dialogButton == ButtonType.OK) {
 				return EncryptionController.generateFromPassword(this.password.getValue().trim());
 			} else {
 				return null;

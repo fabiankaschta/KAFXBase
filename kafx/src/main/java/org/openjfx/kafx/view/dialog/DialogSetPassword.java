@@ -22,15 +22,13 @@ public class DialogSetPassword extends DialogUserInput<SecretKey> {
 		this.passwordConfirm = new UserInputTextInput(new PasswordField());
 		super.addInput(this.passwordConfirm, TranslationController.translate("dialog_setPassword_passwordConfirm"));
 
-		ButtonType cancelButtonType = ButtonType.CANCEL;
-		ButtonType okButtonType = ButtonType.OK;
-		this.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-		this.getDialogPane().lookupButton(okButtonType).disableProperty()
+		this.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+		this.getDialogPane().lookupButton(ButtonType.OK).disableProperty()
 				.bind(this.password.isSelectedExpression().not().or(this.passwordConfirm.isSelectedExpression().not())
 						.or(this.password.valueProperty().isNotEqualTo(this.passwordConfirm.valueProperty())));
 
 		this.setResultConverter(dialogButton -> {
-			if (dialogButton == okButtonType) {
+			if (dialogButton == ButtonType.OK) {
 				return EncryptionController.generateFromPassword(this.password.getValue().trim());
 			} else {
 				return null;
