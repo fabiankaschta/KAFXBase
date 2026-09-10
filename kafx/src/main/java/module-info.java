@@ -11,6 +11,7 @@ module org.openjfx.kafx {
 	exports org.openjfx.kafx.lang;
 	exports org.openjfx.kafx.model;
 	exports org.openjfx.kafx.pattern;
+	exports org.openjfx.kafx.view;
 	exports org.openjfx.kafx.view.alert;
 	exports org.openjfx.kafx.view.control;
 	exports org.openjfx.kafx.view.dialog;

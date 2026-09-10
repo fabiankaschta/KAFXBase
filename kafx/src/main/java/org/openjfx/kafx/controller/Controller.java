@@ -3,6 +3,8 @@ package org.openjfx.kafx.controller;
 import java.net.URL;
 import java.util.logging.Level;
 
+import org.openjfx.kafx.view.pane.MenuBarMessage;
+
 import javafx.stage.Stage;
 import javafx.application.Application;
 
@@ -12,17 +14,11 @@ public class Controller {
 	}
 
 	public static void init(String configFileName) {
-		init(configFileName, Level.WARNING);
+		init(null, configFileName, Level.WARNING);
 	}
 
 	public static void init(String configFileName, Level logLevel) {
-		LogController.init(logLevel);
-		ExceptionController.init();
-		PropertiesController.init();
-		ConfigController.init(configFileName);
-		CloseController.init();
-		FontSizeController.init();
-		TranslationController.init();
+		init(null, configFileName, logLevel);
 	}
 
 	public static void init(String configFilePath, String configFileName) {
@@ -33,7 +29,12 @@ public class Controller {
 		LogController.init(logLevel);
 		ExceptionController.init();
 		PropertiesController.init();
-		ConfigController.init(configFilePath, configFileName);
+		ChangeController.init();
+		if (configFilePath == null) {
+			ConfigController.init(configFileName);
+		} else {
+			ConfigController.init(configFilePath, configFileName);
+		}
 		CloseController.init();
 		FontSizeController.init();
 		TranslationController.init();
@@ -45,6 +46,7 @@ public class Controller {
 
 	private static Application application;
 	private static Stage primaryStage;
+	private static MenuBarMessage menuBar;
 
 	public static void setApplication(Application app) {
 		LogController.log(LogController.DEBUG, "setting application");
@@ -56,12 +58,23 @@ public class Controller {
 		primaryStage = stage;
 	}
 
+	public static void setMenuBar(MenuBarMessage bar) {
+		LogController.log(LogController.DEBUG, "setting menu bar");
+		menuBar = bar;
+	}
+
 	public static Application getApplication() {
 		return application;
 	}
 
 	public static Stage getPrimaryStage() {
 		return primaryStage;
+	}
+
+	public static void setMenuBarMessage(String message) {
+		if (menuBar != null) {
+			menuBar.setMessage(message);
+		}
 	}
 
 }

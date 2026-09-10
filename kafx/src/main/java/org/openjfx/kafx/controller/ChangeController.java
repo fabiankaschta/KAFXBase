@@ -72,6 +72,8 @@ public class ChangeController extends Controller {
 	}
 
 	protected void handleChange() {
+		Controller.setMenuBarMessage(getChangeCounter() == 0 ? ""
+				: getChangeCounter() + " " + TranslationController.translate("status_unsaved_changes"));
 	}
 
 	public static void resetChanges() {
