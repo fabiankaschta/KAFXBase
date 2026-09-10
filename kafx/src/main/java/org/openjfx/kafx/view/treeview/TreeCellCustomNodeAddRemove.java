@@ -1,6 +1,5 @@
 package org.openjfx.kafx.view.treeview;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -20,18 +19,11 @@ public class TreeCellCustomNodeAddRemove<T> extends TreeCell<T> {
 	private String removeSymbol = "-";
 	private final Function<T, Node> converter;
 	private final Consumer<TreeItem<T>> addHandler;
-	private final Function<TreeItem<T>, Optional<Boolean>> editHandler;
 	private final Consumer<TreeItem<T>> removeHandler;
 
 	public TreeCellCustomNodeAddRemove(Function<T, Node> converter, Consumer<TreeItem<T>> addHandler,
-			Function<TreeItem<T>, Optional<Boolean>> editHandler, Consumer<TreeItem<T>> removeHandler) {
+			Consumer<TreeItem<T>> removeHandler) {
 		this.addHandler = addHandler;
-		this.editHandler = editHandler;
-		if (this.editHandler != null) {
-			setEditable(true);
-		} else {
-			setEditable(false);
-		}
 		this.removeHandler = removeHandler;
 		this.converter = converter;
 
