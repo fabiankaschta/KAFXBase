@@ -6,6 +6,8 @@ import org.openjfx.kafx.controller.Controller;
 import org.openjfx.kafx.controller.FileController;
 import org.openjfx.kafx.controller.TranslationController;
 
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -36,11 +38,19 @@ public class DialogFirstStart extends DialogCustom<Boolean> {
 		startMessage.setTextAlignment(TextAlignment.CENTER);
 		this.getDialogPane().setContent(startMessage);
 		this.getDialogPane().getButtonTypes().addAll(NEW_FILE, OPEN_FILE, CLOSE);
+		((Button) this.getDialogPane().lookupButton(NEW_FILE)).addEventFilter(ActionEvent.ACTION, event -> {
+			if (!FileController.newFile()) {
+				event.consume();
+			}
+		});
+		((Button) this.getDialogPane().lookupButton(OPEN_FILE)).addEventFilter(ActionEvent.ACTION, event -> {
+			if (!FileController.openFile()) {
+				event.consume();
+			}
+		});
 		this.setResultConverter(buttonType -> {
-			if (buttonType == DialogFirstStart.NEW_FILE) {
-				return FileController.newFile();
-			} else if (buttonType == DialogFirstStart.OPEN_FILE) {
-				return FileController.openFile();
+			if (buttonType == DialogFirstStart.NEW_FILE || buttonType == DialogFirstStart.OPEN_FILE) {
+				return true;
 			} else {
 				return false;
 			}
