@@ -1,6 +1,5 @@
 package org.openjfx.kafx.view.dialog;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -13,8 +12,6 @@ import org.openjfx.kafx.view.dialog.userinput.UserInputChoiceBox;
 import org.openjfx.kafx.view.tableview.TableViewFullSize;
 
 import javafx.collections.ListChangeListener;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
@@ -29,13 +26,12 @@ public class DialogCSVImport<T> extends DialogUserInput<Boolean> {
 	private final TableViewFullSize<T> preview;
 	private final int previewAmount;
 
-	public DialogCSVImport(File file, CSVParser<T> parser, TableViewFullSize<T> preview, int previewAmount,
-			Consumer<T> importer) throws IOException {
-		this(TranslationController.translate("dialog_import__title"), file, parser, preview, previewAmount, importer);
+	public DialogCSVImport(CSVParser<T> parser, TableViewFullSize<T> preview, int previewAmount, Consumer<T> importer) {
+		this(TranslationController.translate("dialog_import_title"), parser, preview, previewAmount, importer);
 	}
 
-	public DialogCSVImport(String title, File file, CSVParser<T> parser, TableViewFullSize<T> preview,
-			int previewAmount, Consumer<T> importer) throws IOException {
+	public DialogCSVImport(String title, CSVParser<T> parser, TableViewFullSize<T> preview, int previewAmount,
+			Consumer<T> importer) {
 		super(title, new DialogPaneCustom());
 
 		this.dialogPane = (DialogPaneCustom) this.getDialogPane();
@@ -71,7 +67,11 @@ public class DialogCSVImport<T> extends DialogUserInput<Boolean> {
 			}
 		});
 		this.separator = new UserInputChoiceBox<Character>(separatorChoiceBox);
-		parser.guessSeparator();
+		try {
+			parser.guessSeparator();
+		} catch (IOException e) {
+			ExceptionController.exception(e);
+		}
 		this.separator.setDefaultValue(parser.getSeparator());
 		this.separator.selectDefault();
 		this.separator.valueProperty().subscribe(v -> {
@@ -116,7 +116,11 @@ public class DialogCSVImport<T> extends DialogUserInput<Boolean> {
 		super.addInput(this.quotationMark, TranslationController.translate("dialog_import_quotationMark"));
 
 		this.labeled = new UserInputCheckBox(new CheckBox());
-		parser.checkContainsLabels(preview.getColumns().stream().map(c -> c.getText()).toArray(n -> new String[n]));
+		try {
+			parser.checkContainsLabels(preview.getColumns().stream().map(c -> c.getText()).toArray(n -> new String[n]));
+		} catch (IOException e) {
+			ExceptionController.exception(e);
+		}
 		this.labeled.setDefaultValue(parser.containsLabel());
 		this.labeled.selectDefault();
 		this.labeled.valueProperty().subscribe(v -> {
@@ -140,14 +144,12 @@ public class DialogCSVImport<T> extends DialogUserInput<Boolean> {
 		this.dialogPane.expandedProperty().subscribe(() -> this.setResizable(false));
 		this.dialogPane.setExpanded(true);
 
-		ButtonType doneButtonType = new ButtonType(TranslationController.translate("dialog_button_done"),
-				ButtonData.OK_DONE);
-		this.dialogPane.getButtonTypes().add(doneButtonType);
+		this.dialogPane.getButtonTypes().add(IMPORT);
 		this.dialogPane.setDetailsButtonMoreText(TranslationController.translate("dialog_import_preview_show"));
 		this.dialogPane.setDetailsButtonLessText(TranslationController.translate("dialog_import_preview_hide"));
 
 		this.setResultConverter(r -> {
-			if (r != null) {
+			if (r == IMPORT) {
 				try {
 					Stream<T> stream = parser.map();
 					stream.forEach(t -> importer.accept(t));

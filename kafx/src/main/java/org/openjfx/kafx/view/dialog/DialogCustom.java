@@ -11,12 +11,14 @@ import javafx.scene.control.Dialog;
 public abstract class DialogCustom<T> extends Dialog<T> {
 
 	public final static ButtonType CANCEL = ButtonType.CANCEL;
-	public final static ButtonType ADD = new ButtonType(TranslationController.translate("dialog_add_button_add"),
+	public final static ButtonType ADD = new ButtonType(TranslationController.translate("dialog_button_add"),
 			ButtonData.OK_DONE);
 	public final static ButtonType ADD_MORE = ButtonType.NEXT;
-	public final static ButtonType EDIT = new ButtonType(TranslationController.translate("dialog_edit_button_edit"),
+	public final static ButtonType EDIT = new ButtonType(TranslationController.translate("dialog_button_edit"),
 			ButtonData.OK_DONE);
 	public final static ButtonType DONE = new ButtonType(TranslationController.translate("dialog_button_done"),
+			ButtonData.OK_DONE);
+	public final static ButtonType IMPORT = new ButtonType(TranslationController.translate("dialog_button_import"),
 			ButtonData.OK_DONE);
 
 	public DialogCustom() {
