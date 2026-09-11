@@ -194,6 +194,14 @@
     -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0, 1.0 1.0 2.0 1.0;
 }
 
+.table-row-cell:last-row {
+    -fx-background-insets: 0, 0;
+}
+
+.table-row-cell:last-row > .tableview2-cell {
+    -fx-background-insets: -1.0;
+}
+
 /* selected tab labels bold */
 .tab-pane-selected-bold > .tab-header-area > .headers-region > .tab:selected {
     -fx-font-weight: bold;
@@ -228,9 +236,67 @@
     -fx-background-radius: 0.0, 0.0, 0.0;
 }
 .scroll-pane-no-focus .scroll-bar {
-	-fx-background-insets: 0, 0;
-	-fx-padding: 0;
+	-fx-background-insets: 0.0, 0.0;
+	-fx-padding: 0.0;
 }
 .scroll-pane-no-focus .corner {
-    -fx-background-insets: 0;
+    -fx-background-insets: 0.0;
+}
+/* style for table footer classes */
+.tableview-footer .column-header-background { 
+	visibility: hidden; 
+	-fx-padding: -1.0em;
+}
+.footer-label { 
+    -fx-background-color: -fx-box-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0.0, 0.0 1.0 1.0 0.0, 1.0 2.0 2.0 1.0;
+    -fx-font-weight: bold;
+    -fx-size: 2.0em;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 0.166667em;
+}
+.themed .footer {
+    -fx-background: -theme-color-bright-heavy;
+}
+.themed .tableview-footer .table-row-cell {
+    -fx-background-color: -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0, 1;
+}
+.themed .tableview-footer .filler,
+.themed .tableview-footer .table-cell {
+    -fx-background-color: -fx-box-border, -fx-inner-border, -fx-body-color;
+    -fx-background-insets: 0.0, 0.0 1.0 1.0 0.0, 1.0 2.0 2.0 1.0;
+    -fx-font-weight: bold;
+    -fx-size: 2.0em;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-padding: 0.166667em;
+}
+.themed .tableview-footer { 
+    -fx-background-color: -theme-color;
+    -fx-text-fill: -fx-text-base-color;
+}
+.tableview-hbar-invisible .scroll-bar:horizontal .track {
+    -fx-padding:0.0px;
+	-fx-background-color:transparent;
+	-fx-border-color:transparent;
+	-fx-background-radius: 0.0em;
+	-fx-border-radius:2.0em;
+
+}
+.tableview-hbar-invisible .scroll-bar:horizontal .increment-button ,
+.tableview-hbar-invisible .scroll-bar:horizontal .decrement-button {
+    -fx-background-color:transparent;
+	-fx-background-radius: 0.0em;
+	-fx-padding:0.0 0.0 0.0 0.0;
+}
+.tableview-hbar-invisible .scroll-bar:horizontal .increment-arrow,
+.tableview-hbar-invisible .scroll-bar:horizontal .decrement-arrow {
+	-fx-shape: " ";	
+	-fx-padding:0.0;        
+}
+.tableview-hbar-invisible .scroll-bar:horizontal .thumb {
+    -fx-background-color:transparent;
+	-fx-background-insets: 0.0, 0.0, 0.0;
+	-fx-background-radius: 2.0em;
+    -fx-padding:0.0px;
 }
