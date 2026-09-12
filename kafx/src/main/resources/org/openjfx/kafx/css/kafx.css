@@ -99,6 +99,9 @@
 .themed .titled-pane {
     -fx-base: -theme-color;
 }
+.themed .choice-box .menu-item > .label { 
+    -fx-base: -theme-color-bright-heavy;
+}
 .themed .table-view {
     -fx-base: -theme-color;
     -fx-background-color: -theme-color-bright-heavy;
