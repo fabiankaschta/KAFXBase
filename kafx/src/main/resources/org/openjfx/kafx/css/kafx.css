@@ -140,6 +140,12 @@
     -fx-color: -theme-color-bright-mid;
     -fx-text-fill: -fx-text-base-color;
 }
+/* tableView3 fixed columns don't indicate selection */
+.themed .nested-column-footer > .column-header.table-column.fixed.selected,
+.themed .nested-column-footer > .column-header.table-column.fixed.selected > .label {
+    -fx-color: -theme-color;
+    -fx-text-fill: -fx-text-base-color;
+}
 
 /* text inputs for table cells */
 .text-input-table-cell {
