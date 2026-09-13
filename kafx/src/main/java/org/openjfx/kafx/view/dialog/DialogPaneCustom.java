@@ -75,8 +75,8 @@ public class DialogPaneCustom extends DialogPane {
 				buttonBar = child;
 			} else if (content == null && child instanceof Label) {
 				content = child;
-			} else if (child instanceof GridPane) {
-				graphic = child;
+//			} else if (child instanceof GridPane) {
+//				graphic = child;
 			}
 		}
 		if (header == null) {

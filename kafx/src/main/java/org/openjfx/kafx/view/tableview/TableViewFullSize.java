@@ -2,19 +2,14 @@ package org.openjfx.kafx.view.tableview;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.skin.NestedTableColumnHeader;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.control.skin.TableHeaderRow;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Rectangle;
 
 public class TableViewFullSize<T> extends TableView<T> {
 
@@ -32,7 +27,6 @@ public class TableViewFullSize<T> extends TableView<T> {
 		this(fixedCellSize, FXCollections.observableArrayList());
 	}
 
-	@SuppressWarnings("unchecked")
 	public TableViewFullSize(double fixedCellSize, ObservableList<T> items) {
 		super(items);
 		// for initial sizes
@@ -48,40 +42,12 @@ public class TableViewFullSize<T> extends TableView<T> {
 					.queryAccessibleAttribute(AccessibleAttribute.HORIZONTAL_SCROLLBAR);
 			scrollBarHorizontal.setPrefSize(0, 0);
 			scrollBarHorizontal.setVisible(false);
-			TableHeaderRow header = (TableHeaderRow) this.queryAccessibleAttribute(AccessibleAttribute.HEADER);
-			// consume drag (resize) attempts
-			header.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-				if (e.getTarget() instanceof Rectangle) {
-					e.consume();
-				}
-			});
-			ObservableList<TableColumnHeader> columnHeaders = header.getRootHeader().getColumnHeaders();
-			columnHeaders.addListener((ListChangeListener<TableColumnHeader>) _ -> {
-				for (TableColumnHeader ch : columnHeaders) {
-					ch.pseudoClassStateChanged(PseudoClass.getPseudoClass("last-column"),
-							ch == columnHeaders.getLast());
-				}
-			});
-			// allow programatical resize
-			this.setColumnResizePolicy(r -> {
-				if (r.getColumn() != null) {
-					r.setColumnWidth(r.getColumn(), r.getColumn().getWidth() + r.getDelta());
-				}
-				return true;
-			});
 		});
-		this.setRowFactory(_ -> {
-			TableRow<T> row = new TableRow<>();
-			row.indexProperty()
-					.addListener((_, _, newValue) -> row.pseudoClassStateChanged(PseudoClass.getPseudoClass("last-row"),
-							newValue.intValue() == TableViewFullSize.this.getItems().size() - 1));
-			return row;
-		});
-	}
-
-	@Override
-	protected double computeMinWidth(double height) {
-		return this.computePrefWidth(height);
+		
+		this.setMinWidth(USE_PREF_SIZE);
+		this.setMaxWidth(USE_PREF_SIZE);
+		this.setMinHeight(USE_PREF_SIZE);
+		this.setMaxHeight(USE_PREF_SIZE);
 	}
 
 	@Override
@@ -93,16 +59,6 @@ public class TableViewFullSize<T> extends TableView<T> {
 			}
 		}
 		return width + this.snappedLeftInset() + this.snappedRightInset();
-	}
-
-	@Override
-	protected double computeMaxWidth(double height) {
-		return this.computePrefWidth(height);
-	}
-
-	@Override
-	protected double computeMinHeight(double width) {
-		return computePrefHeight(width);
 	}
 
 	@Override
@@ -133,11 +89,6 @@ public class TableViewFullSize<T> extends TableView<T> {
 		} else {
 			return root.getHeight();
 		}
-	}
-
-	@Override
-	protected double computeMaxHeight(double width) {
-		return computePrefHeight(width);
 	}
 
 }
