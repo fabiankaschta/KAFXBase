@@ -36,6 +36,14 @@ public class ChangeController extends Controller {
 		LogController.log(LogController.DEBUG, c.toString());
 		change();
 	};
+	public final static ListChangeListener<Object> LISTLISTENER_PERMUTATE_UNSAVED_CHANGES = c -> {
+		while(c.next()) {
+			if(c.wasPermutated()) {
+				LogController.log(LogController.DEBUG, c.toString());
+				change();
+			}
+		}
+	};
 	public final static MapChangeListener<Object, Object> MAPLISTENER_UNSAVED_CHANGES = m -> {
 		LogController.log(LogController.DEBUG, m.toString());
 		change();
