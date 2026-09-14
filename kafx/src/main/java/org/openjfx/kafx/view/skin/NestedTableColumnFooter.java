@@ -15,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
 /**
  * A cell column footer.
@@ -34,7 +35,6 @@ public class NestedTableColumnFooter extends NestedTableColumnHeader3 {
 						// getColumnHeaders() only returns child columns, so this works
 						if (n instanceof TableColumnHeader && !getColumnHeaders().contains(n)) {
 							label = (TableColumnHeader) n;
-							break;
 						}
 					}
 					if (label != null) {
@@ -67,6 +67,19 @@ public class NestedTableColumnFooter extends NestedTableColumnHeader3 {
 				}
 				// use first column header to move to front
 				final TableColumnHeader n = getColumnHeaders().get(0);
+				n.getChildrenUnmodifiable().addListener((ListChangeListener<Node>) c -> {
+					while(c.next()) {
+						if(c.wasAdded()) {
+							for(Node node : c.getAddedSubList()) {
+								// this should be the sort arrow
+								if(node instanceof GridPane) {
+									// this fixes the gap between label and where the arrow would be
+									((GridPane) node).setPrefWidth(0);
+								}
+							}
+						}
+					}
+				});
 				n.resize(fixedColumnWidth, snapSizeY(h - labelHeight));
 				n.toFront();
 			}
