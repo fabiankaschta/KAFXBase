@@ -5,6 +5,7 @@ module org.openjfx.kafx {
 	requires transitive org.pf4j;
     requires transitive org.controlsfx.controls;
 	requires com.github.zafarkhaja.semver;
+	
 	exports org.openjfx.kafx.controller;
 	exports org.openjfx.kafx.converter;
 	exports org.openjfx.kafx.io;

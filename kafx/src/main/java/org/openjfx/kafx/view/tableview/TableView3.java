@@ -53,6 +53,7 @@ import javafx.scene.control.skin.NestedTableColumnHeader;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.control.skin.TableHeaderRow;
 
+import org.controlsfx.control.tableview2.TableView2;
 import org.controlsfx.control.tableview2.actions.ColumnFixAction;
 import org.controlsfx.control.tableview2.actions.RowFixAction;
 import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
@@ -874,7 +875,7 @@ public class TableView3<S> extends TableView<S> {
 		 * For more information please see JDK-8088253
 		 */
 		if (stylesheet == null) {
-			stylesheet = TableView3.class.getResource("tableview3.css") //$NON-NLS-1$
+			stylesheet = TableView3.class.getResource("/org/openjfx/kafx/css/tableview3.css") //$NON-NLS-1$
 					.toExternalForm();
 		}
 
