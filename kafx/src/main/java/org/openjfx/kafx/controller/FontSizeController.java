@@ -2,6 +2,7 @@ package org.openjfx.kafx.controller;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class FontSizeController extends Controller {
@@ -55,12 +56,22 @@ public class FontSizeController extends Controller {
 		if (isInitialized()) {
 			fontSizeProperty().subscribe((oldSize, newSize) -> {
 				tableView.getColumns().forEach(column -> {
-					double width = column.getWidth();
-					double widthRatio = width / oldSize.doubleValue();
-					double newWidth = widthRatio * newSize.doubleValue();
-					tableView.resizeColumn(column, newWidth - width);
+					resizeColumn(tableView, column, oldSize.doubleValue(), newSize.doubleValue());
 				});
 			});
+		}
+	}
+
+	private static <T> void resizeColumn(TableView<T> tableView, TableColumn<T, ?> column, double oldSize, double newSize) {
+		if (column.getColumns().isEmpty()) {
+			double width = column.getWidth();
+			double widthRatio = width / oldSize;
+			double newWidth = widthRatio * newSize;
+			tableView.resizeColumn(column, newWidth - width);
+		} else {
+			for (TableColumn<T, ?> childColumn : column.getColumns()) {
+				resizeColumn(tableView, childColumn, oldSize, newSize);
+			}
 		}
 	}
 
