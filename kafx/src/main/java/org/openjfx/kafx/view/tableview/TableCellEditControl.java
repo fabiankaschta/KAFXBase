@@ -4,6 +4,7 @@ import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TablePosition;
@@ -15,11 +16,19 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 
 	public final static EventType<Event> FOCUS_LOST = new EventType<>("FOCUS_LOST");
 
+	protected Node graphic;
 	private Control control;
 	private boolean canceled;
 
 	protected TableCellEditControl() {
+		this(null);
+	}
+
+	protected TableCellEditControl(Node graphic) {
 		this.setAlignment(Pos.CENTER_LEFT);
+		this.graphic = graphic;
+		this.setContentDisplay(ContentDisplay.RIGHT);
+		this.setGraphicTextGap(0);
 	}
 
 	protected final Control getControl() {
@@ -29,7 +38,26 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 	@Override
 	protected void updateItem(T item, boolean empty) {
 		super.updateItem(item, empty);
-		updateItem(null, null, control);
+		if (this.isEmpty()) {
+			this.setText(null);
+			this.setGraphic(null);
+		} else {
+			updateGraphic(item);
+			if (this.isEditing()) {
+				if (control != null) {
+					this.setControlValue();
+				}
+				this.setText(null);
+				this.setGraphic(control);
+			} else {
+				this.setCellText();
+				this.setGraphic(graphic);
+			}
+		}
+		canceled = false;
+	}
+
+	protected void updateGraphic(T item) {
 	}
 
 	@Override
@@ -55,32 +83,6 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 			commitEdit(getFromControl());
 		}
 	}
-
-	private void updateItem(final HBox hbox, final Node graphic, final Control control) {
-		if (this.isEmpty()) {
-			this.setText(null);
-			this.setGraphic(null);
-		} else {
-			if (this.isEditing()) {
-				if (control != null) {
-					this.setControlValue();
-				}
-				this.setText(null);
-
-				if (graphic != null) {
-					hbox.getChildren().setAll(graphic, control);
-					this.setGraphic(hbox);
-				} else {
-					this.setGraphic(control);
-				}
-			} else {
-				this.setCellText();
-				this.setGraphic(graphic);
-			}
-		}
-		canceled = false;
-	}
-
 	protected abstract void setCellText();
 
 	protected abstract void setControlValue();
