@@ -247,3 +247,12 @@
 .scroll-pane-no-focus .corner {
     -fx-background-insets: 0;
 }
+
+/* remove custom colors from color picker (due to crash) */
+.color-picker-no-custom .color-palette .hyperlink,
+.color-picker-no-custom .color-palette .separator {
+    visibility: hidden;
+}
+.color-picker-no-custom .color-palette {
+    -fx-padding: 15 15 -30 15;
+}
