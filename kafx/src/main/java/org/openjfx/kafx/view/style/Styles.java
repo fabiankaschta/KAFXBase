@@ -34,19 +34,19 @@ public class Styles {
 		});
 	}
 
-	private static Color deriveBrightMid(Color color) {
+	public static Color deriveBrightMid(Color color) {
 		return color.interpolate(Color.WHITE, 0.5);
 	}
 
-	private static Color deriveBrightHeavy(Color color) {
+	public static Color deriveBrightHeavy(Color color) {
 		return color.interpolate(Color.WHITE, 0.9);
 	}
 
-	private static Color deriveFadedMid(Color color) {
+	public static Color deriveFadedMid(Color color) {
 		return color.interpolate(Color.WHITESMOKE, 0.5);
 	}
 
-	private static Color deriveFadedHeavy(Color color) {
+	public static Color deriveFadedHeavy(Color color) {
 		return color.interpolate(Color.WHITESMOKE, 0.8);
 	}
 
