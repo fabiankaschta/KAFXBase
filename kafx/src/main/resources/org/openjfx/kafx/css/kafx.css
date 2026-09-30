@@ -30,16 +30,19 @@
 }
 
 /* hide empty rows & cells within */
+.table-view-hide-empty {
+    -fx-empty-color: transparent;
+}
 .table-view-hide-empty > .virtual-flow > .clipped-container > .sheet > .table-row-cell:empty {
-    -fx-background-color: -fx-control-inner-background;
+    -fx-background-color: -fx-empty-color;
     -fx-border-width: 0.0px;
 }
 .table-view-hide-empty > .virtual-flow > .clipped-container > .sheet > .table-row-cell:empty > .table-cell {
-    -fx-background-color: -fx-control-inner-background;
+    -fx-background-color: -fx-empty-color;
     -fx-border-width: 0.0px;
 }
 .table-view-hide-empty > .virtual-flow > .clipped-container > .sheet > .table-row-cell:empty > .tableview2-cell {
-    -fx-background-color: -fx-control-inner-background;
+    -fx-background-color: -fx-empty-color;
     -fx-border-width: 0.0px;
 }
 
@@ -124,6 +127,11 @@
 .themed .tableview2-cell:focused {
     -fx-background-color: -fx-table-cell-border-color, -fx-background;
 }
+.themed .table-row-cell:filled > .table-cell:selected,
+.themed .table-row-cell:filled > .tableview2-cell:selected {
+    -fx-background: -fx-selection-bar-non-focused-2;
+    -fx-table-cell-border-color: derive(-fx-color,5%);
+}
 .themed .table-view .column-header,
 .themed .table-view .column-header > .label,
 .themed .table-view2 .column-header.south-header.fixed,
@@ -139,6 +147,49 @@
 .nested-column-header > .column-header.table-column.fixed.selected > .label {
     -fx-color: -theme-color-bright-mid;
     -fx-text-fill: -fx-text-base-color;
+}
+.themed .table-cell:diagonal-pattern,
+.themed .tableview2-cell:diagonal-pattern {
+	-fx-control-inner-background: linear-gradient(from 0px 0px to 2px 2px, repeat, white 50%, -theme-color-faded-heavy 50%);
+	-fx-control-inner-background-alt: linear-gradient(from 0px 0px to 2px 2px, repeat, -theme-color-faded-heavy 50%, white 50%);
+        -fx-text-inner-color: ladder(
+        -theme-color-faded-heavy,
+        -fx-light-text-color 45%,
+        -fx-dark-text-color  46%,
+        -fx-dark-text-color  59%,
+        -fx-mid-text-color   60%
+    );
+    -fx-text-background-color: ladder(
+        -theme-color-faded-heavy,
+        -fx-light-text-color 45%,
+        -fx-dark-text-color  46%,
+        -fx-dark-text-color  59%,
+        -fx-mid-text-color   60%
+    );
+}
+.themed .table-cell:faint-selection:diagonal-pattern,
+.themed .tableview2-cell:faint-selection:diagonal-pattern {
+	-fx-control-inner-background: linear-gradient(from 0px 0px to 2px 2px, repeat, -theme-color-bright-heavy 50%, -theme-color-faded-heavy 50%);
+	-fx-control-inner-background-alt: linear-gradient(from 0px 0px to 2px 2px, repeat, -theme-color-bright-heavy 50%, -theme-color-faded-heavy 50%);
+    -fx-text-inner-color: ladder(
+        -theme-color-faded-heavy,
+        -fx-light-text-color 45%,
+        -fx-dark-text-color  46%,
+        -fx-dark-text-color  59%,
+        -fx-mid-text-color   60%
+    );
+    -fx-text-background-color: ladder(
+        -theme-color-faded-heavy,
+        -fx-light-text-color 45%,
+        -fx-dark-text-color  46%,
+        -fx-dark-text-color  59%,
+        -fx-mid-text-color   60%
+    );
+}
+.themed .table-row-cell:filled > .table-cell:selected:diagonal-pattern,
+.themed .table-row-cell:filled > .tableview2-cell:selected:diagonal-pattern {
+    -fx-background: linear-gradient(from 0px 0px to 2px 2px, repeat, -fx-selection-bar-non-focused-2 50%, -theme-color-faded-heavy 50%);
+    -fx-table-cell-border-color: derive(-fx-color,5%);
 }
 /* tableView3 fixed columns don't indicate selection */
 .themed .nested-column-footer > .column-header.table-column.fixed.selected,
