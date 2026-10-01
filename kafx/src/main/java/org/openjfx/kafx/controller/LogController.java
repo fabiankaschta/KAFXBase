@@ -1,5 +1,6 @@
 package org.openjfx.kafx.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
@@ -13,7 +14,7 @@ public class LogController extends Controller {
 
 	private static LogController controller;
 
-	protected LogController(Level level) {
+	protected LogController(String path, String fileName, Level level) {
 		logger.setUseParentHandlers(false);
 		logger.setLevel(level);
 		Formatter logFormatter = new Formatter() {
@@ -35,27 +36,48 @@ public class LogController extends Controller {
 				super.flush();
 			}
 		});
-		try {
-			FileHandler fileHandler = new FileHandler("%h/.gradefx.log") {
-
-				@Override
-				public synchronized void publish(LogRecord record) {
-					super.publish(record);
-					super.flush();
+		if (fileName != null) {
+			try {
+				File file;
+				if (path != null) {
+					File pathFile = new File(path);
+					pathFile.mkdirs();
+					file = new File(path + System.getProperty("file.separator") + fileName);
+				} else {
+					file = new File(fileName);
 				}
-			};
-			fileHandler.setFormatter(logFormatter);
-			logger.addHandler(fileHandler);
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, e.getMessage());
+				file.createNewFile();
+				FileHandler fileHandler = new FileHandler(file.getPath()) {
+
+					@Override
+					public synchronized void publish(LogRecord record) {
+						super.publish(record);
+						super.flush();
+					}
+				};
+				fileHandler.setFormatter(logFormatter);
+				logger.addHandler(fileHandler);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage());
+			}
 		}
 		for (Handler h : logger.getHandlers()) {
 			h.setLevel(level);
 		}
 	}
 
+	public static void init() {
+		init(Level.WARNING);
+	}
+
 	public static void init(Level level) {
-		init(new LogController(level));
+		String appName = Controller.getAppName().toLowerCase();
+		init(System.getProperty("user.home") + System.getProperty("file.separator") + '.' + appName, appName + ".log",
+				level);
+	}
+
+	public static void init(String path, String fileName, Level level) {
+		init(new LogController(path, fileName, level));
 	}
 
 	public static boolean isInitialized() {

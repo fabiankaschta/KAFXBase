@@ -10,21 +10,18 @@ public class ConfigController extends Controller {
 
 	private static ConfigController controller;
 
-	private final String filename;
-	private final String path;
 	private File file;
 	private final Properties properties = new Properties();
 
-	protected ConfigController(String fileName) {
-		this(System.getProperty("user.home"), fileName);
-	}
-
 	protected ConfigController(String path, String fileName) {
-		this.path = path;
-		this.filename = fileName;
 		try {
-			this.file = new File(this.path == null ? this.filename
-					: this.path + System.getProperty("file.separator") + this.filename);
+			if (path != null) {
+				File pathFile = new File(path);
+				pathFile.mkdirs();
+				this.file = new File(path + System.getProperty("file.separator") + fileName);
+			} else {
+				this.file = new File(fileName);
+			}
 			this.file.createNewFile();
 			this.properties.load(new FileInputStream(this.file));
 		} catch (IOException e) {
@@ -32,8 +29,16 @@ public class ConfigController extends Controller {
 		}
 	}
 
+	public static void init() {
+		String appName = Controller.getAppName().toLowerCase();
+		init(new ConfigController(
+				System.getProperty("user.home") + System.getProperty("file.separator") + '.' + appName,
+				appName + ".cfg"));
+	}
+
 	public static void init(String fileName) {
-		init(new ConfigController(fileName));
+		init(new ConfigController(System.getProperty("user.home") + System.getProperty("file.separator") + '.'
+				+ Controller.getAppName().toLowerCase(), fileName));
 	}
 
 	public static void init(String path, String fileName) {
@@ -94,9 +99,11 @@ public class ConfigController extends Controller {
 		if (isInitialized()) {
 			try {
 				controller.properties.store(new FileOutputStream(controller.file), "");
-				LogController.log(LogController.DEBUG, "storing config to file " + controller.file.getPath() + " - successful");
+				LogController.log(LogController.DEBUG,
+						"storing config to file " + controller.file.getPath() + " - successful");
 			} catch (IOException e) {
-				LogController.log(LogController.DEBUG, "storing config to file " + controller.file.getPath() + " - exception");
+				LogController.log(LogController.DEBUG,
+						"storing config to file " + controller.file.getPath() + " - exception");
 				ExceptionController.exception(e);
 			}
 		}

@@ -1,43 +1,19 @@
 package org.openjfx.kafx.controller;
 
 import java.net.URL;
-import java.util.logging.Level;
 
 import org.openjfx.kafx.view.pane.MenuBarMessage;
 
-import javafx.stage.Stage;
 import javafx.application.Application;
+import javafx.stage.Stage;
 
 public class Controller {
 
 	protected Controller() {
 	}
 
-	public static void init(String configFileName) {
-		init(null, configFileName, Level.WARNING);
-	}
-
-	public static void init(String configFileName, Level logLevel) {
-		init(null, configFileName, logLevel);
-	}
-
-	public static void init(String configFilePath, String configFileName) {
-		init(configFilePath, configFileName, Level.WARNING);
-	}
-
-	public static void init(String configFilePath, String configFileName, Level logLevel) {
-		LogController.init(logLevel);
-		ExceptionController.init();
-		PropertiesController.init();
-		ChangeController.init();
-		if (configFilePath == null) {
-			ConfigController.init(configFileName);
-		} else {
-			ConfigController.init(configFilePath, configFileName);
-		}
-		CloseController.init();
-		FontSizeController.init();
-		TranslationController.init();
+	public static void init(String appName) {
+		Controller.appName = appName;
 	}
 
 	public static URL getStylesheetURL() {
@@ -47,6 +23,7 @@ public class Controller {
 	private static Application application;
 	private static Stage primaryStage;
 	private static MenuBarMessage menuBar;
+	private static String appName = "KAFX";
 
 	public static void setApplication(Application app) {
 		LogController.log(LogController.DEBUG, "setting application");
@@ -75,6 +52,10 @@ public class Controller {
 		if (menuBar != null) {
 			menuBar.setMessage(message);
 		}
+	}
+
+	public static String getAppName() {
+		return appName;
 	}
 
 }
