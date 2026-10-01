@@ -85,6 +85,9 @@
     -theme-color-faded-mid: -theme-color;
     -theme-color-faded-heavy: -theme-color;
 }
+.themed .chart-bar {
+    -fx-bar-fill: -theme-color; 
+}
 .themed .scroll-pane {
     -fx-base: -theme-color;
     -fx-background: -theme-color-bright-heavy;
