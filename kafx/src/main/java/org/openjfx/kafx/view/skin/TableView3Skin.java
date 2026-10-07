@@ -795,11 +795,12 @@ public class TableView3Skin<S> extends TableViewSkin<S> {
 			// Do not add the width of hidden column!
 			if (tableView.getVisibleLeafColumns().get(columnIndex).isVisible()) {
 				TableColumn<S, ?> column = (TableColumn<S, ?>) tableView.getVisibleLeafColumns().get(columnIndex);
-				while (column.getParentColumn() != null) {
+				TableColumn<S, ?> rootParent = column;
+				while (rootParent.getParentColumn() != null) {
 					// on nested columns, we check if the root parent is the one fixed
-					column = (TableColumn<S, ?>) column.getParentColumn();
+					rootParent = (TableColumn<S, ?>) rootParent.getParentColumn();
 				}
-				if (tableView.isColumnFixingEnabled() && tableView.getFixedColumns().contains(column)) {
+				if (tableView.isColumnFixingEnabled() && tableView.getFixedColumns().contains(rootParent)) {
 					fixedColumnWidth += column.getWidth();
 				}
 				start += column.getWidth();
@@ -818,7 +819,6 @@ public class TableView3Skin<S> extends TableViewSkin<S> {
 		// right edge of the table
 		final double max = getFlow().getHorizontalBar().getMax();
 		double newPos;
-
 		/**
 		 * If the starting position of our column if lower than the left egde (of
 		 * tableView or fixed columns), then we need to scroll.
@@ -827,7 +827,7 @@ public class TableView3Skin<S> extends TableViewSkin<S> {
 			newPos = start - fixedColumnWidth < 0 ? start : start - fixedColumnWidth;
 			getFlow().getHorizontalBar().setValue(newPos);
 			// If the starting point is not visible on the right.
-		} else if (start > pos + headerWidth) {
+		} else if (end > pos + headerWidth) {
 			final double delta = start < 0 || end > headerWidth ? start - pos - fixedColumnWidth : 0;
 			newPos = Math.min(pos + delta, max);
 			// MODIFIED FIXME somewhere here is a bug that causes irritating jumps when selecting the next downwards cell

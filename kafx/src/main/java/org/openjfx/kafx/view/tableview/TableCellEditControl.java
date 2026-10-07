@@ -118,8 +118,6 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 			// if user clicks outside of table
 			if (wasFocused && isEditing()) {
 				commitEdit(getFromControl());
-				// used to determine if selection should be cleared
-				getTableView().getSelectionModel().clearSelection();
 			}
 		});
 		control.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -137,18 +135,22 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 					event.consume();
 				} else if (event.getCode() == KeyCode.RIGHT
 						|| (!event.isShiftDown() && event.getCode() == KeyCode.TAB)) {
+					commitEdit(getFromControl());
 					getTableView().fireEvent(event); // select, scroll
 					getTableView().edit(row, getTableView().getVisibleLeafColumn(col + 1));
 					event.consume();
 				} else if (event.getCode() == KeyCode.LEFT || (event.isShiftDown() && event.getCode() == KeyCode.TAB)) {
+					commitEdit(getFromControl());
 					getTableView().fireEvent(event);
 					getTableView().edit(row, getTableView().getVisibleLeafColumn(col - 1));
 					event.consume();
 				} else if (event.getCode() == KeyCode.UP) {
+					commitEdit(getFromControl());
 					getTableView().fireEvent(event);
 					getTableView().edit(row - 1, getTableView().getVisibleLeafColumn(col));
 					event.consume();
 				} else if (event.getCode() == KeyCode.DOWN) {
+					commitEdit(getFromControl());
 					getTableView().fireEvent(event);
 					getTableView().edit(row + 1, getTableView().getVisibleLeafColumn(col));
 					event.consume();
