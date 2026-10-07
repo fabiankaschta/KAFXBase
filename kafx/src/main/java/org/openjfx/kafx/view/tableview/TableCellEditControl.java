@@ -1,5 +1,9 @@
 package org.openjfx.kafx.view.tableview;
 
+import org.openjfx.kafx.controller.ConfigController;
+import org.openjfx.kafx.controller.TranslationController;
+import org.openjfx.kafx.view.skin.TableView3Skin;
+
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.geometry.Pos;
@@ -10,9 +14,26 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TablePosition;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 
 public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
+
+	public enum EnterMode {
+		CONFIRM, HORIZONTAL, VERTICAL;
+
+		@Override
+		public String toString() {
+			switch (this) {
+			case CONFIRM:
+				return TranslationController.translate("enterMode_confirm");
+			case HORIZONTAL:
+				return TranslationController.translate("enterMode_horizontal");
+			case VERTICAL:
+				return TranslationController.translate("enterMode_vertical");
+			default:
+				return super.toString();
+			}
+		}
+	}
 
 	public final static EventType<Event> FOCUS_LOST = new EventType<>("FOCUS_LOST");
 
@@ -32,7 +53,10 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 	}
 
 	protected final Control getControl() {
-		return control;
+		if (this.control == null) {
+			this.control = createControlHelper();
+		}
+		return this.control;
 	}
 
 	@Override
@@ -44,17 +68,18 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 		} else {
 			updateGraphic(item);
 			if (this.isEditing()) {
-				if (control != null) {
-					this.setControlValue();
+				if (this.control == null) {
+					this.control = createControlHelper();
 				}
+				this.setControlValue();
 				this.setText(null);
-				this.setGraphic(control);
+				this.setGraphic(this.control);
 			} else {
 				this.setCellText();
-				this.setGraphic(graphic);
+				this.setGraphic(this.graphic);
 			}
 		}
-		canceled = false;
+		this.canceled = false;
 	}
 
 	protected void updateGraphic(T item) {
@@ -67,42 +92,31 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 			return;
 		}
 
-		if (control == null) {
-			control = createControlHelper();
+		if (this.control == null) {
+			this.control = createControlHelper();
 		}
+		this.setControlValue();
+		this.setText(null);
 
-		startEdit(null, null, control);
+		this.setGraphic(this.control);
+		startEditControl();
 	}
 
 	@Override
 	public final void cancelEdit() {
-		if (canceled) {
+		if (this.canceled) {
 			super.cancelEdit();
 			cancelEdit(null);
 		} else {
 			commitEdit(getFromControl());
 		}
 	}
+
 	protected abstract void setCellText();
 
 	protected abstract void setControlValue();
 
 	protected abstract T getFromControl();
-
-	private void startEdit(final HBox hbox, final Node graphic, final Control control) {
-		if (control != null) {
-			setControlValue();
-		}
-		this.setText(null);
-
-		if (graphic != null) {
-			hbox.getChildren().setAll(graphic, control);
-			this.setGraphic(hbox);
-		} else {
-			this.setGraphic(control);
-		}
-		startEditControl();
-	}
 
 	protected void startEditControl() {
 	}
@@ -128,6 +142,39 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 				// enter => confirm edit
 				if (event.getCode() == KeyCode.ENTER) {
 					commitEdit(getFromControl());
+					String enterModeConfig = ConfigController.get("TABLECELL_ENTER_MODE");
+					if (enterModeConfig != null) {
+						switch (EnterMode.valueOf(enterModeConfig)) {
+						case CONFIRM:
+							break;
+						case HORIZONTAL:
+							if (event.isShiftDown()) {
+								getTableView().getSelectionModel().selectPrevious();
+								getTableView().scrollToColumn(getTableView().getVisibleLeafColumn(col - 1));
+								getTableView().edit(row, getTableView().getVisibleLeafColumn(col - 1));
+							} else {
+								getTableView().getSelectionModel().selectNext();
+								getTableView().scrollToColumn(getTableView().getVisibleLeafColumn(col + 1));
+								getTableView().edit(row, getTableView().getVisibleLeafColumn(col + 1));
+							}
+							break;
+						case VERTICAL:
+							if (event.isShiftDown()) {
+								getTableView().getSelectionModel().selectAboveCell();
+								if (getTableView().getSkin() instanceof TableView3Skin) {
+									((TableView3Skin<?>) getTableView().getSkin()).onSelectAboveCell();
+								}
+								getTableView().edit(row - 1, getTableView().getVisibleLeafColumn(col));
+							} else {
+								getTableView().getSelectionModel().selectBelowCell();
+								if (getTableView().getSkin() instanceof TableView3Skin) {
+									((TableView3Skin<?>) getTableView().getSkin()).onSelectBelowCell();
+								}
+								getTableView().edit(row + 1, getTableView().getVisibleLeafColumn(col));
+							}
+							break;
+						}
+					}
 					event.consume();
 				} else if (event.getCode() == KeyCode.ESCAPE) {
 					canceled = true;
@@ -136,22 +183,30 @@ public abstract class TableCellEditControl<S, T> extends TableCell<S, T> {
 				} else if (event.getCode() == KeyCode.RIGHT
 						|| (!event.isShiftDown() && event.getCode() == KeyCode.TAB)) {
 					commitEdit(getFromControl());
-					getTableView().fireEvent(event); // select, scroll
+					getTableView().getSelectionModel().selectNext();
+					getTableView().scrollToColumn(getTableView().getVisibleLeafColumn(col + 1));
 					getTableView().edit(row, getTableView().getVisibleLeafColumn(col + 1));
 					event.consume();
 				} else if (event.getCode() == KeyCode.LEFT || (event.isShiftDown() && event.getCode() == KeyCode.TAB)) {
 					commitEdit(getFromControl());
-					getTableView().fireEvent(event);
+					getTableView().getSelectionModel().selectPrevious();
+					getTableView().scrollToColumn(getTableView().getVisibleLeafColumn(col - 1));
 					getTableView().edit(row, getTableView().getVisibleLeafColumn(col - 1));
 					event.consume();
 				} else if (event.getCode() == KeyCode.UP) {
 					commitEdit(getFromControl());
-					getTableView().fireEvent(event);
+					getTableView().getSelectionModel().selectAboveCell();
+					if (getTableView().getSkin() instanceof TableView3Skin) {
+						((TableView3Skin<?>) getTableView().getSkin()).onSelectAboveCell();
+					}
 					getTableView().edit(row - 1, getTableView().getVisibleLeafColumn(col));
 					event.consume();
 				} else if (event.getCode() == KeyCode.DOWN) {
 					commitEdit(getFromControl());
-					getTableView().fireEvent(event);
+					getTableView().getSelectionModel().selectBelowCell();
+					if (getTableView().getSkin() instanceof TableView3Skin) {
+						((TableView3Skin<?>) getTableView().getSkin()).onSelectBelowCell();
+					}
 					getTableView().edit(row + 1, getTableView().getVisibleLeafColumn(col));
 					event.consume();
 				}

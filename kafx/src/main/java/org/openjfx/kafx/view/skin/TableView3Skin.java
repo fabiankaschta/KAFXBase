@@ -710,14 +710,14 @@ public class TableView3Skin<S> extends TableViewSkin<S> {
 
 	/** {@inheritDoc} */
 	@Override
-	protected void onSelectAboveCell() {
+	public void onSelectAboveCell() {
 		super.onSelectAboveCell();
 		scrollHorizontally();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	protected void onSelectBelowCell() {
+	public void onSelectBelowCell() {
 		super.onSelectBelowCell();
 		scrollHorizontally();
 	}
