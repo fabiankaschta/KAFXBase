@@ -1,0 +1,41 @@
+.toggle-switch > .track {
+	-fx-background-color:
+          -fx-shadow-highlight-color,
+          linear-gradient(to bottom, derive(-fx-text-box-border, -10.0%), -fx-text-box-border),
+          linear-gradient(to bottom,
+            derive(-fx-color, -9.0%),
+            derive(-fx-color, 0.0%),
+            derive(-fx-color, -5.0%),
+            derive(-fx-color, -12.0%)
+          );
+    -fx-background-insets: 0.0 0.0 -1.0 0.0, 0.0, 1.0;
+    -fx-background-radius: 0.25em, 0.25em, 0.166667em; /* 3 3 2 */
+    -fx-padding: 0.25em; /* 3 */
+	-fx-fill: -fx-background;
+}
+.toggle-switch > .knob  {
+    -fx-background-color:
+        linear-gradient(to bottom, derive(-fx-text-box-border, -20.0%), derive(-fx-text-box-border, -30.0%)),
+        -fx-control-inner-background;
+    -fx-background-insets: 0.0, 1.0;
+    -fx-background-radius: 1.0em; /* makes sure this remains circular */
+    -fx-padding: 0.583333em;  /* 7 */
+    -fx-effect: dropshadow(two-pass-box , rgba(0.0, 0.0, 0.0, 0.1), 5.0, 0.0 , 0.0, 2.0);
+}
+.toggle-switch:on > .track {
+	-fx-background-color:
+          -fx-shadow-highlight-color,
+          linear-gradient(to bottom, derive(-fx-text-box-border, -10.0%), -fx-text-box-border),
+          linear-gradient(to bottom,
+            derive(-fx-control-inner-background, -9.0%),
+            derive(-fx-control-inner-background, 0.0%),
+            derive(-fx-control-inner-background, -5.0%),
+            derive(-fx-control-inner-background, -12.0%)
+          );
+}
+.toggle-switch:on > .knob {
+    -fx-background-color:
+        linear-gradient(to bottom, derive(-fx-text-box-border, -20.0%), derive(-fx-text-box-border, -30.0%)),
+        -fx-inner-border,
+        -fx-body-color;
+}

@@ -1,20 +1,20 @@
 package org.openjfx.kafx.view.dialog.userinput;
 
-import org.controlsfx.control.ToggleSwitch;
+import org.openjfx.kafx.view.control.ToggleSwitch;
 
 public class UserInputToggleSwitch extends UserInputSingle<Boolean> {
 
 	private final ToggleSwitch toggleSwitch;
 
-	public UserInputToggleSwitch(ToggleSwitch checkBox) {
-		this(checkBox, false);
+	public UserInputToggleSwitch(ToggleSwitch toggleSwitch) {
+		this(toggleSwitch, false);
 	}
 
 	public UserInputToggleSwitch(ToggleSwitch toggleSwitch, boolean defaultValue) {
 		super(defaultValue, defaultValue, false);
 		this.toggleSwitch = toggleSwitch;
-		this.toggleSwitch.setSelected(defaultValue);
-		this.valueProperty().bindBidirectional(this.toggleSwitch.selectedProperty());
+		this.toggleSwitch.setOn(defaultValue);
+		this.valueProperty().bindBidirectional(this.toggleSwitch.onProperty());
 		this.getChildren().add(this.toggleSwitch);
 	}
 
