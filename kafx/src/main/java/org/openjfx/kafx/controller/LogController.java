@@ -67,7 +67,7 @@ public class LogController extends Controller {
 	}
 
 	public static void init() {
-		init(Level.WARNING);
+		init(DEBUG);
 	}
 
 	public static void init(Level level) {
@@ -87,6 +87,10 @@ public class LogController extends Controller {
 	public static void init(LogController controller) {
 		LogController.log(LogController.DEBUG, "init log controller");
 		LogController.controller = controller;
+	}
+
+	public static void setLevel(Level level) {
+		logger.setLevel(level);
 	}
 
 	@SuppressWarnings("serial")
