@@ -11,6 +11,7 @@ import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.skin.NestedTableColumnHeader;
 import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.control.skin.TableHeaderRow;
@@ -35,7 +36,8 @@ public class TableHeaderRowKafx extends TableHeaderRow {
 		this.visibleProperty().bind(getTableView().headerVisibleProperty());
 		updateColumnHeaderVisibility(this.skin.isColumnHeaderVisible());
 
-		this.getSkin().getSelectedColumns().addListener((ListChangeListener<Integer>) _ -> updateHighlightSelection());
+		this.getSkin().getSelectedCells()
+				.addListener((ListChangeListener<TablePosition<?, ?>>) _ -> updateHighlightSelection());
 
 		Platform.runLater(() -> {
 			updateVisibleLeafColumnHeaders();
@@ -105,7 +107,7 @@ public class TableHeaderRowKafx extends TableHeaderRow {
 	private void updateHighlightSelection() {
 		removeStyleHeader(getRootHeader(), TableViewKafxSkin.SELECTED_STYLE);
 
-		this.getSkin().getSelectedColumns().forEach(i -> {
+		this.getSkin().getSelectedCells().stream().map(pos -> pos.getColumn()).forEach(i -> {
 			if (this.visibleLeafHeaders.size() > i) {
 				TableColumnHeader header = this.visibleLeafHeaders.get(i);
 				if (!header.getStyleClass().contains(TableViewKafxSkin.SELECTED_STYLE)
@@ -114,7 +116,6 @@ public class TableHeaderRowKafx extends TableHeaderRow {
 				}
 			}
 		});
-
 	}
 
 	private void buildVisibleLeafColumnHeaders(List<TableColumnHeader> colHeaders) {

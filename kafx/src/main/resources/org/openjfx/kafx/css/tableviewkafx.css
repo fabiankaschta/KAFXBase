@@ -1,0 +1,5 @@
+.table-row-cell:faint-selection .table-cell {
+    -fx-font-weight: bold;
+	-fx-control-inner-background: -fx-color;
+	-fx-control-inner-background-alt: -fx-color;
+}

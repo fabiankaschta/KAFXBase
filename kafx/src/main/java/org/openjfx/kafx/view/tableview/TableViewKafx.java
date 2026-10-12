@@ -188,6 +188,16 @@ public class TableViewKafx<S> extends TableView<S> {
 		return new TableViewKafxSkin<>(this);
 	}
 
+	private String styleSheet;
+
+	@Override
+	public String getUserAgentStylesheet() {
+		if (styleSheet == null) {
+			styleSheet = TableViewKafx.class.getResource("/org/openjfx/kafx/css/tableviewkafx.css").toExternalForm();
+		}
+		return styleSheet;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	protected double computePrefHeight(double width) {

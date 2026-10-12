@@ -31,11 +31,12 @@ public class TableViewKafxSkin<S> extends TableViewSkin<S> {
 	public static final String SELECTED_STYLE = "selected";
 	public static final String NO_SELECTION = "no-selection";
 	public static final String LEAF_STYLE = "leaf-header";
-	public static final PseudoClass SELECTED = PseudoClass.getPseudoClass("SELECTED_STYLE");
+	public static final PseudoClass SELECTED = PseudoClass.getPseudoClass(SELECTED_STYLE);
 	public static final PseudoClass LEFT_CELL = PseudoClass.getPseudoClass("left");
 	public static final PseudoClass RIGHT_CELL = PseudoClass.getPseudoClass("right");
 	public static final PseudoClass SINGLE_CELL = PseudoClass.getPseudoClass("single");
-	public static final PseudoClass FIXED_CELL = PseudoClass.getPseudoClass("FIXED_STYLE");
+	public static final PseudoClass FIXED_CELL = PseudoClass.getPseudoClass(FIXED_STYLE);
+	public static final PseudoClass FAINT_SELCTION = PseudoClass.getPseudoClass("faint-selection");
 
 	private final TableViewKafx<S> tableView;
 	private final TableFooterRowKafx tableFooterRow;
@@ -53,7 +54,7 @@ public class TableViewKafxSkin<S> extends TableViewSkin<S> {
 	 */
 	final Map<TableRowKafx<S>, Set<TableCell<S, ?>>> deportedCells = new HashMap<>();
 
-	private final ObservableList<Integer> selectedColumns = FXCollections.observableArrayList();
+	private final ObservableList<TablePosition<S, ?>> selectedCells = FXCollections.observableArrayList();
 
 	public TableViewKafxSkin(TableViewKafx<S> tableView) {
 		super(tableView);
@@ -73,10 +74,10 @@ public class TableViewKafxSkin<S> extends TableViewSkin<S> {
 		getTableHeaderRow().init();
 		getTableFooterRow().init();
 
-		@SuppressWarnings("rawtypes")
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		ListChangeListener<TablePosition> selectionListener = _ -> {
-			this.selectedColumns.clear();
-			tableView.getSelectionModel().getSelectedCells().forEach(pos -> this.selectedColumns.add(pos.getColumn()));
+			this.selectedCells.clear();
+			tableView.getSelectionModel().getSelectedCells().forEach(pos -> this.selectedCells.add(pos));
 		};
 
 		tableView.selectionModelProperty().subscribe(model -> {
@@ -119,8 +120,8 @@ public class TableViewKafxSkin<S> extends TableViewSkin<S> {
 		});
 	}
 
-	public ObservableList<Integer> getSelectedColumns() {
-		return selectedColumns;
+	public ObservableList<TablePosition<S, ?>> getSelectedCells() {
+		return selectedCells;
 	}
 
 	// hide the super method here

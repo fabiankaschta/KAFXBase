@@ -83,8 +83,7 @@
 .themed .toggle-switch {
 	-fx-control-inner-background: -theme-color-bright-heavy;
 }
-.themed .table-cell:faint-selection {
-    -fx-font-weight: bold;
+.themed .table-row-cell:faint-selection .table-cell {
 	-fx-control-inner-background: -theme-color-bright-heavy;
 	-fx-control-inner-background-alt: -theme-color-bright-heavy;
 }

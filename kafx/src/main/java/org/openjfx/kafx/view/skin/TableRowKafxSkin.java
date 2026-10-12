@@ -10,11 +10,13 @@ import java.util.Set;
 
 import org.openjfx.kafx.view.tableview.TableViewKafx;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.skin.CellSkinBase;
 import javafx.util.Callback;
@@ -47,6 +49,13 @@ public class TableRowKafxSkin<S> extends CellSkinBase<TableRow<S>> {
 		});
 
 		this.skin = (TableViewKafxSkin<S>) tableView.getSkin();
+		this.skin.getSelectedCells().addListener((ListChangeListener<TablePosition<S, ?>>) _ -> updateFaintSelection());
+	}
+
+	private void updateFaintSelection() {
+		List<TablePosition<S, ?>> selectedRowCells = this.skin.getSelectedCells()
+				.filtered(pos -> pos.getRow() == this.getSkinnable().getIndex());
+		this.getSkinnable().pseudoClassStateChanged(TableViewKafxSkin.FAINT_SELCTION, !selectedRowCells.isEmpty());
 	}
 
 	private void requestCellUpdate() {
@@ -67,7 +76,6 @@ public class TableRowKafxSkin<S> extends CellSkinBase<TableRow<S>> {
 	/** {@inheritDoc} */
 	@Override
 	protected void layoutChildren(double x, final double y, final double w, final double h) {
-//		System.out.println("row layout");
 		final ObservableList<TableColumn<S, ?>> columns = tableView.getVisibleLeafColumns();
 		if (columns.isEmpty()) {
 			super.layoutChildren(x, y, w, h);
