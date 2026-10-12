@@ -152,16 +152,15 @@ public class TableViewKafxSkin<S> extends TableViewSkin<S> {
 	/** {@inheritDoc} */
 	@Override
 	protected void layoutChildren(double x, double y, double w, final double h) {
-		super.layoutChildren(x, y, w, h);
-
-		// position the table footer
 		if (isColumnFooterVisible()) {
+			// position the table footer
 			final double baselineOffset = getSkinnable().getLayoutBounds().getHeight() / 2;
-			double hBarHeight = getFlow().getHorizontalBar().isVisible() ? getFlow().getHorizontalBar().getHeight() : 0;
-
 			double tableFooterRowHeight = getTableFooterRow().prefHeight(-1);
-			layoutInArea(getTableFooterRow(), x, y + h - tableFooterRowHeight - hBarHeight, w, tableFooterRowHeight,
-					baselineOffset, HPos.CENTER, VPos.CENTER);
+			super.layoutChildren(x, y, w, h - tableFooterRowHeight);
+			layoutInArea(getTableFooterRow(), x, y + h - tableFooterRowHeight, w, tableFooterRowHeight, baselineOffset,
+					HPos.CENTER, VPos.CENTER);
+		} else {
+			super.layoutChildren(x, y, w, h);
 		}
 	}
 

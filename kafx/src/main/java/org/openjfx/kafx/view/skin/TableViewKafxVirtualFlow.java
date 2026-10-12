@@ -1,16 +1,19 @@
 package org.openjfx.kafx.view.skin;
 
+import org.openjfx.kafx.view.tableview.TableViewKafx;
+
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.skin.VirtualFlow;
 
 final class TableViewKafxVirtualFlow<T extends IndexedCell<?>> extends VirtualFlow<T> {
 
-	private final TableViewKafxSkin<?> skin;
+	private final TableViewKafx<?> tableView;
 
 	public TableViewKafxVirtualFlow(TableViewKafxSkin<?> skin) {
 		super();
-		this.skin = skin;
+		this.tableView = (TableViewKafx<?>) skin.getSkinnable();
 	}
 
 	protected ScrollBar getVerticalBar() {
@@ -25,16 +28,22 @@ final class TableViewKafxVirtualFlow<T extends IndexedCell<?>> extends VirtualFl
 	@Override
 	protected void layoutChildren() {
 		super.layoutChildren();
-		// vbar should end before footer
+		// hbar should not span over fixed columns
 		ScrollBar vbar = getVbar();
 		ScrollBar hbar = getHbar();
-		if (vbar.isVisible() && this.skin.isColumnFooterVisible() && this.skin.getTableFooterRow() != null) {
-			final double viewportBreadth = getHeight() - (hbar.isVisible() ? hbar.getHeight() : 0);
-			final double viewportLength = getViewportLength();
-			double prefWidth = vbar.prefWidth(viewportBreadth);
-			double height = viewportLength;
-			height -= this.skin.getTableFooterRow().getHeight();
-			vbar.resize(prefWidth, snapSizeY(height));
+		final double viewportBreadth = getWidth() - (vbar.isVisible() ? vbar.getWidth() : 0);
+		final double viewportLength = getViewportLength();
+		if (hbar.isVisible() && this.tableView.getFixedColumnsIndex() != -1) {
+			double fixedColumnWidth = 0;
+			for (int i = 0; i <= this.tableView.getFixedColumnsIndex(); i++) {
+				TableColumn<?, ?> col = this.tableView.getColumns().get(i);
+				if (col.isVisible()) {
+					fixedColumnWidth += col.getWidth();
+				}
+			}
+			final double height = hbar.prefHeight(viewportBreadth);
+			final double width = viewportBreadth - fixedColumnWidth;
+			hbar.resizeRelocate(fixedColumnWidth, viewportLength, width, height);
 		}
 	}
 }
