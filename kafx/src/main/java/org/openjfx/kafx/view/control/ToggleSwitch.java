@@ -127,8 +127,8 @@ public class ToggleSwitch extends StackPane {
 		final double height = getHeight();
 		final double top = getInsets().getTop();
 		final double left = getInsets().getLeft();
-		track.resize(width, height / 2);
-		track.relocate(left, top + height / 4);
+		track.resize(width, height);
+		track.relocate(left, top);
 		knob.resize(height, height);
 		knob.relocate(left, top);
 	}
