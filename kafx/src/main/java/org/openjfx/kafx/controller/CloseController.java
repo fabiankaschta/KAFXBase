@@ -3,6 +3,7 @@ package org.openjfx.kafx.controller;
 import org.openjfx.kafx.view.alert.AlertSaveChanges;
 
 import javafx.event.Event;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 
 public class CloseController extends Controller {
@@ -55,6 +56,13 @@ public class CloseController extends Controller {
 			LogController.log(LogController.DEBUG, "close no changes");
 		}
 		if (!event.isConsumed()) {
+			if (Controller.getPrimaryStage() != null && !Controller.getPrimaryStage().isMaximized()) {
+				Scene scene = Controller.getPrimaryStage().getScene();
+				if (scene != null) {
+					ConfigController.set("WIDTH", String.valueOf(scene.getWidth()));
+					ConfigController.set("HEIGHT", String.valueOf(scene.getHeight()));
+				}
+			}
 			ConfigController.store();
 		}
 	}

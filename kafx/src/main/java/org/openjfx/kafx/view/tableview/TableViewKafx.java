@@ -1,5 +1,7 @@
 package org.openjfx.kafx.view.tableview;
 
+import java.util.List;
+
 import org.openjfx.kafx.controller.FontSizeController;
 import org.openjfx.kafx.view.skin.TableFooterRowKafx;
 import org.openjfx.kafx.view.skin.TableHeaderRowKafx;
@@ -19,8 +21,10 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Skin;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.skin.NestedTableColumnHeader;
@@ -33,6 +37,8 @@ public class TableViewKafx<S> extends TableView<S> {
 			null);
 	private final ObjectProperty<Node> fixedColumnsFooterGraphic = new SimpleObjectProperty<>(this,
 			"fixedColumnsFooterGraphic", null);
+	private final ObjectProperty<ContextMenu> tableMenuButtonContextMenu = new SimpleObjectProperty<>(this,
+			"tableMenuButtonContextMenu", null);
 	private final BooleanProperty footerVisible = new SimpleBooleanProperty(this, "footerVisible", false);
 	private final BooleanProperty headerVisible = new SimpleBooleanProperty(this, "headerVisible", true);
 
@@ -120,6 +126,23 @@ public class TableViewKafx<S> extends TableView<S> {
 	 */
 	public BooleanProperty headerVisibleProperty() {
 		return this.headerVisible;
+	}
+
+	public void setTableMenuButtonContextMenu(ContextMenu contextMenu) {
+		this.tableMenuButtonContextMenu.set(contextMenu);
+	}
+
+	public ContextMenu getTableMenuButtonContextMenu() {
+		return this.tableMenuButtonContextMenu.get();
+	}
+
+	/**
+	 * Whether the table header is visible (default: true).
+	 * 
+	 * @return headerVisible property
+	 */
+	public ObjectProperty<ContextMenu> tableMenuButtonContextMenuProperty() {
+		return this.tableMenuButtonContextMenu;
 	}
 
 	/**
@@ -244,6 +267,45 @@ public class TableViewKafx<S> extends TableView<S> {
 			}
 		}
 		return width;
+	}
+
+	// sortOrder: "+:1/-:2:0" means first asc column index 1, then desc sub-column
+	// index 0 of column index 2
+	public String getSortOrderString() {
+		StringBuilder sortOrderString = new StringBuilder();
+		List<TableColumn<S, ?>> sortOrder = this.getSortOrder();
+		for (TableColumn<S, ?> column : sortOrder) {
+			if (sortOrderString.length() > 0) {
+				sortOrderString.append('/');
+			}
+			String tmp = "";
+			TableColumn<S, ?> root = column;
+			while (root.getParentColumn() != null) {
+				tmp = ':' + String.valueOf(root.getParentColumn().getColumns().indexOf(root)) + tmp;
+				root = (TableColumn<S, ?>) root.getParentColumn();
+			}
+			sortOrderString.append(column.getSortType() == SortType.ASCENDING ? '+' : '-');
+			sortOrderString.append(':');
+			sortOrderString.append(this.getColumns().indexOf(root));
+			sortOrderString.append(tmp);
+		}
+		return sortOrderString.toString();
+	}
+
+	public void setSortOrderString(String sortOrder) {
+		if (sortOrder.length() > 0) {
+			String[] columns = sortOrder.split("/");
+			for (String column : columns) {
+				String[] subColumns = column.split(":");
+				SortType sortType = subColumns[0].equals("+") ? SortType.ASCENDING : SortType.DESCENDING;
+				TableColumn<S, ?> tableColumn = this.getColumns().get(Integer.valueOf(subColumns[1]));
+				for (int i = 2; i < subColumns.length; i++) {
+					tableColumn = tableColumn.getColumns().get(Integer.valueOf(subColumns[i]));
+				}
+				tableColumn.setSortType(sortType);
+				this.getSortOrder().add(tableColumn);
+			}
+		}
 	}
 
 }

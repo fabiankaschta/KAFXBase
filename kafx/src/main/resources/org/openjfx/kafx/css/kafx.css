@@ -80,6 +80,10 @@
     -fx-selection-bar: -theme-color;
     -fx-selection-bar-non-focused-2: -theme-color-bright-mid;
 }
+.themed .table-view > .column-header-background > .show-hide-columns-button .context-menu {
+    -fx-color: -theme-color-bright-mid;
+	-fx-control-inner-background: -theme-color-bright-heavy;
+}
 .themed .toggle-switch {
 	-fx-control-inner-background: -theme-color-bright-heavy;
 }

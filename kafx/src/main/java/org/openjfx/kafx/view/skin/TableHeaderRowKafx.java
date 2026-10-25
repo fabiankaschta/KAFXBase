@@ -10,6 +10,9 @@ import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.skin.NestedTableColumnHeader;
@@ -17,6 +20,7 @@ import javafx.scene.control.skin.TableColumnHeader;
 import javafx.scene.control.skin.TableHeaderRow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
 public class TableHeaderRowKafx extends TableHeaderRow {
 
@@ -30,6 +34,8 @@ public class TableHeaderRowKafx extends TableHeaderRow {
 		this.skin = skin;
 		this.table = (TableViewKafx<?>) skin.getSkinnable();
 		this.buildVisibleLeafColumnHeaders(getRootHeader().getColumnHeaders());
+		// TODO use this to allow custom context menu
+		// super.showColumnMenu(null);
 	}
 
 	public void init() {
@@ -58,6 +64,18 @@ public class TableHeaderRowKafx extends TableHeaderRow {
 
 	protected TableViewKafxSkin<?> getSkin() {
 		return this.skin;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected void showColumnMenu(MouseEvent mouseEvent) {
+		ContextMenu menu = table.getTableMenuButtonContextMenu();
+		if (menu != null) {
+			menu.show((Node) mouseEvent.getSource(), Side.BOTTOM, 0, 0);
+			mouseEvent.consume();
+		} else {
+			super.showColumnMenu(mouseEvent);
+		}
 	}
 
 	/** {@inheritDoc} */

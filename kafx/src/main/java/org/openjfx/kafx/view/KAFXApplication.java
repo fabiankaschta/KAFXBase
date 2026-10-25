@@ -69,16 +69,6 @@ public abstract class KAFXApplication extends Application {
 		Scene scene = new Scene(root, Double.valueOf(ConfigController.get("WIDTH")),
 				Double.valueOf(ConfigController.get("HEIGHT")));
 		scene.getStylesheets().add(Controller.getStylesheetURL().toExternalForm());
-		scene.widthProperty().subscribe(width -> {
-			if (!primaryStage.isMaximized()) {
-				ConfigController.set("WIDTH", String.valueOf(width));
-			}
-		});
-		scene.heightProperty().subscribe(height -> {
-			if (!primaryStage.isMaximized()) {
-				ConfigController.set("HEIGHT", String.valueOf(height));
-			}
-		});
 
 		primaryStage.setScene(scene);
 		primaryStage.setOnShown(_ -> UpdateController.checkForUpdates(true));
