@@ -4,7 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableStringValue;
 
 public class ConfigController extends Controller {
 
@@ -12,6 +17,7 @@ public class ConfigController extends Controller {
 
 	private File file;
 	private final Properties properties = new Properties();
+	private final Map<String, ReadOnlyStringWrapper> observables = new HashMap<>();
 
 	protected ConfigController(String path, String fileName) {
 		try {
@@ -68,7 +74,8 @@ public class ConfigController extends Controller {
 	public static void remove(String option) {
 		if (isInitialized()) {
 			LogController.log(LogController.DEBUG, "config remove " + option);
-			controller.properties.remove(option.toString());
+			controller.properties.remove(option);
+			controller.observables.remove(option);
 		}
 	}
 
@@ -76,7 +83,20 @@ public class ConfigController extends Controller {
 		if (!isInitialized()) {
 			return null;
 		} else {
-			return controller.properties.getProperty(option.toString());
+			return controller.properties.getProperty(option);
+		}
+	}
+
+	public static ObservableStringValue getObservable(String option) {
+		if (!isInitialized()) {
+			return null;
+		} else {
+			ReadOnlyStringWrapper observable = controller.observables.get(option);
+			if (observable == null) {
+				observable = new ReadOnlyStringWrapper(controller, option, get(option));
+				controller.observables.put(option, observable);
+			}
+			return observable.getReadOnlyProperty();
 		}
 	}
 
@@ -84,13 +104,17 @@ public class ConfigController extends Controller {
 		if (isInitialized()) {
 			LogController.log(LogController.DEBUG, "config set " + option + " to " + value);
 			controller.properties.setProperty(option.toString(), value);
+			ReadOnlyStringWrapper observable = controller.observables.get(option);
+			if (observable != null) {
+				observable.set(value);
+			}
 		}
 	}
 
 	public static void putIfNotExists(String option, String value) {
 		if (isInitialized()) {
 			if (!exists(option)) {
-				set(option.toString(), value);
+				set(option, value);
 			}
 		}
 	}

@@ -56,24 +56,25 @@ public abstract class DialogUserInput<T> extends DialogCustom<T> {
 	}
 
 	public void addInput(int index, UserInput<?> userInput, Node label) {
+		this.userInputs.add(index, userInput);
 		this.grid.addRow(index, label, userInput);
 		this.grid.getRowConstraints().add(index, new RowConstraints());
 		userInput.visibleProperty().subscribe(v -> {
+			int currentIndex = userInputs.indexOf(userInput);
+			RowConstraints rowConstraints = this.grid.getRowConstraints().get(currentIndex);
 			if (!v) {
-				this.grid.getRowConstraints().get(index).minHeightProperty().unbind();
-				this.grid.getRowConstraints().get(index).setMinHeight(0);
-				this.grid.getRowConstraints().get(index).setMaxHeight(0);
-				this.grid.getRowConstraints().get(index).setPrefHeight(0);
+				rowConstraints.minHeightProperty().unbind();
+				rowConstraints.setMinHeight(0);
+				rowConstraints.setMaxHeight(0);
+				rowConstraints.setPrefHeight(0);
 			} else {
-				this.grid.getRowConstraints().get(index).minHeightProperty()
-						.bind(FontSizeController.fontSizeProperty().multiply(2).add(1));
-				this.grid.getRowConstraints().get(index).setMaxHeight(GridPane.USE_COMPUTED_SIZE);
-				this.grid.getRowConstraints().get(index).setPrefHeight(GridPane.USE_COMPUTED_SIZE);
+				rowConstraints.minHeightProperty().bind(FontSizeController.fontSizeProperty().multiply(2).add(1));
+				rowConstraints.setMaxHeight(GridPane.USE_COMPUTED_SIZE);
+				rowConstraints.setPrefHeight(GridPane.USE_COMPUTED_SIZE);
 			}
 			this.getDialogPane().autosize();
 		});
 		label.visibleProperty().bind(userInput.visibleProperty());
-		this.userInputs.add(index, userInput);
 		if (index == 0) {
 			Platform.runLater(() -> userInput.requestFocus());
 		}
