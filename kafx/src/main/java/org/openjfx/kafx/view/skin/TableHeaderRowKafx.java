@@ -34,8 +34,6 @@ public class TableHeaderRowKafx extends TableHeaderRow {
 		this.skin = skin;
 		this.table = (TableViewKafx<?>) skin.getSkinnable();
 		this.buildVisibleLeafColumnHeaders(getRootHeader().getColumnHeaders());
-		// TODO use this to allow custom context menu
-		// super.showColumnMenu(null);
 	}
 
 	public void init() {
