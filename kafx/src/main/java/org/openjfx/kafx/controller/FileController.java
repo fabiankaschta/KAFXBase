@@ -62,7 +62,7 @@ public abstract class FileController extends Controller {
 		}
 	}
 
-	protected boolean handleReadFromFile(File file) throws Exception {
+	protected boolean handleReadFromFile(File file) {
 		return fileIO.readFromFile(file);
 	}
 
@@ -90,7 +90,7 @@ public abstract class FileController extends Controller {
 		}
 	}
 
-	protected boolean handleWriteToFile(File file) throws Exception {
+	protected boolean handleWriteToFile(File file) {
 		return fileIO.writeToFile(file);
 	}
 

@@ -12,16 +12,29 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.openjfx.kafx.controller.ExceptionController;
 import org.openjfx.kafx.model.RomanNumber;
 
 public abstract class FileIO {
 
-	public boolean readFromFile(File file) throws Exception {
+	public final boolean readFromFile(File file) {
+		try {
+			return read(file);
+		} catch (Throwable t) {
+			ExceptionController.exception(t);
+			return false;
+		}
+	}
+
+	protected boolean read(File file) throws Exception {
 		return read(new FileInputStream(file));
 	}
 
@@ -69,7 +82,29 @@ public abstract class FileIO {
 
 	public abstract boolean handleData(Data data);
 
-	public boolean writeToFile(File file) throws Exception {
+	public final boolean writeToFile(File file) {
+		Path path = file.toPath();
+		Path tmp = path.resolveSibling("." + path.getFileName() + "_tmp");
+		try {
+			Files.copy(path, tmp, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+		} catch (Throwable t) {
+			ExceptionController.exception(t);
+			return false;
+		}
+		try {
+			boolean result = write(file);
+			if (!result) {
+				Files.copy(tmp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+			}
+			Files.delete(tmp);
+			return result;
+		} catch (Throwable t) {
+			ExceptionController.exception(t);
+			return false;
+		}
+	}
+
+	protected boolean write(File file) throws Exception {
 		return write(new FileOutputStream(file));
 	}
 

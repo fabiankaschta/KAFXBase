@@ -20,7 +20,7 @@ import org.openjfx.kafx.controller.EncryptionController;
 public abstract class EncryptedFileIO extends FileIO {
 
 	@Override
-	public boolean readFromFile(File file)
+	protected boolean read(File file)
 			throws InvalidKeyException, IOException, InvalidAlgorithmParameterException, ClassNotFoundException {
 		try {
 			FileInputStream fileInputStream = new FileInputStream(file);
@@ -33,7 +33,7 @@ public abstract class EncryptedFileIO extends FileIO {
 			} catch (StreamCorruptedException e) {
 				EncryptionController.invalidPassword();
 				if (EncryptionController.requestSecretKey()) {
-					return readFromFile(file);
+					return read(file);
 				} else {
 					return false;
 				}
@@ -44,7 +44,7 @@ public abstract class EncryptedFileIO extends FileIO {
 	}
 
 	@Override
-	public boolean writeToFile(File file) throws InvalidKeyException, IOException {
+	protected boolean write(File file) throws InvalidKeyException, IOException {
 		try {
 			SecretKey secretKey = EncryptionController.getSecretKey();
 			Cipher cipher = EncryptionController.getCipher();
