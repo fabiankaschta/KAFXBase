@@ -1,6 +1,7 @@
 package org.openjfx.kafx.view.tableview;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import org.openjfx.kafx.controller.FontSizeController;
 import org.openjfx.kafx.view.skin.TableFooterRowKafx;
@@ -23,14 +24,22 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Skin;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.skin.NestedTableColumnHeader;
 import javafx.scene.control.skin.TableColumnHeader;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 
 public class TableViewKafx<S> extends TableView<S> {
+
+	private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
 	private final IntegerProperty fixedColumnsIndex = new SimpleIntegerProperty(this, "fixedColumnsIndex", -1);
 	private final StringProperty fixedColumnsFooterText = new SimpleStringProperty(this, "fixedColumnsFooterText",
@@ -294,6 +303,7 @@ public class TableViewKafx<S> extends TableView<S> {
 
 	public void setSortOrderString(String sortOrder) {
 		if (sortOrder.length() > 0) {
+			this.getSortOrder().clear();
 			String[] columns = sortOrder.split("/");
 			for (String column : columns) {
 				String[] subColumns = column.split(":");
@@ -306,6 +316,61 @@ public class TableViewKafx<S> extends TableView<S> {
 				this.getSortOrder().add(tableColumn);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param cell
+	 * @param onDragStarted  run before fromIndex is registered (i.e. could apply
+	 *                       default sorting)
+	 * @param onDragFinished run when drag is dropped with (fromIndex, toIndex)
+	 */
+	public void addDragAndDropFeature(TableCell<S, ?> cell, Runnable onDragStarted,
+			BiConsumer<Integer, Integer> onDragFinished) {
+		cell.setOnDragDetected(event -> {
+			if (!cell.isEmpty() || cell.getTableRow() == null) {
+				TableRow<S> row = cell.getTableRow();
+				S item = row.getItem();
+				Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+				db.setDragView(row.snapshot(null, null));
+				ClipboardContent cc = new ClipboardContent();
+				// this might sort, so index is registered after
+				onDragStarted.run();
+				Integer index = this.getItems().indexOf(item);
+				cc.put(SERIALIZED_MIME_TYPE, index);
+				db.setContent(cc);
+				event.consume();
+			}
+		});
+
+		cell.setOnDragOver(event -> {
+			TableRow<S> row = cell.getTableRow();
+			Dragboard db = event.getDragboard();
+			if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+				if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+					event.acceptTransferModes(TransferMode.MOVE);
+					event.consume();
+				}
+			}
+		});
+
+		cell.setOnDragDropped(event -> {
+			TableRow<S> row = cell.getTableRow();
+			Dragboard db = event.getDragboard();
+			if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+				int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+				int dropIndex;
+				if (row.isEmpty()) {
+					dropIndex = this.getItems().size();
+				} else {
+					dropIndex = row.getIndex();
+				}
+				onDragFinished.accept(draggedIndex, dropIndex);
+				event.setDropCompleted(true);
+				this.getSelectionModel().select(dropIndex);
+				event.consume();
+			}
+		});
 	}
 
 }
